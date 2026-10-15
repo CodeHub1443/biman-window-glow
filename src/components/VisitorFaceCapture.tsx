@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { UserRound } from "lucide-react";
 
-export function VisitorFaceCapture({ src, isDemo, accent }: { src?: string; isDemo?: boolean; accent: "entry" | "exit" }) {
+export function VisitorFaceCapture({ src, isDemo, accent }: { src?: string | undefined; isDemo?: boolean | undefined; accent: "entry" | "exit" }) {
   const [broken, setBroken] = useState(false);
   const ring = accent === "entry" ? "border-entry" : "border-exit";
   return (

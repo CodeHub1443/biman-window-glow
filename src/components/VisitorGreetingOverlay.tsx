@@ -15,7 +15,7 @@ export function VisitorGreetingOverlay({ event, leaving }: { event: VisitorEvent
   return (
     <div className={`absolute inset-0 z-20 ${leaving ? "animate-greet-out" : ""}`}>
       <div className="absolute inset-0 bg-gradient-to-b from-hud-ink/80 via-hud-ink/55 to-hud-ink/85 backdrop-blur-[2px]" />
-      <div className={`relative flex h-full flex-col px-[11%] pb-[12%] pt-[14%] ${isEntry ? "animate-greet-in" : "animate-greet-depart"}`}>
+      <div className={`relative flex h-full flex-col px-[11%] pb-[17%] pt-[14%] ${isEntry ? "animate-greet-in" : "animate-greet-depart"}`}>
         <div className="flex items-center justify-between font-mono text-[11px] uppercase tracking-[0.25em] hud-text">
           <span className={`flex items-center gap-2 rounded-sm px-2 py-1 font-bold text-hud-ink ${isEntry ? "bg-entry" : "bg-exit"}`}>
             <Icon className="h-3.5 w-3.5" /> {event.type}
@@ -24,7 +24,7 @@ export function VisitorGreetingOverlay({ event, leaving }: { event: VisitorEvent
         </div>
         <div className="mt-3 h-px hud-line" />
 
-        <div className="mx-auto mt-[8%] w-[62%]">
+        <div className="mx-auto mt-[6%] w-[58%]">
           <VisitorFaceCapture src={event.faceImageUrl} isDemo={event.isDemo} accent={accent} />
         </div>
 

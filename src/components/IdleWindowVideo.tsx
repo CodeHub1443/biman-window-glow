@@ -1,8 +1,8 @@
 import { useState } from "react";
 
 export interface IdleWindowVideoProps {
-  mp4?: string;
-  webm?: string;
+  mp4?: string | undefined;
+  webm?: string | undefined;
   fallbackImage: string;
   fit?: "cover" | "contain";
 }

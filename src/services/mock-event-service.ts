@@ -13,7 +13,7 @@ export interface VisitorEvent {
   timestamp: string; // ISO
   stationLabel: string;
   cameraLabel?: string;
-  faceImageUrl?: string;
+  faceImageUrl?: string | undefined;
   isDemo?: boolean;
 }
 
