@@ -1,15 +1,13 @@
 import type { ReactNode } from "react";
 
-/** Layered aircraft window: bezel → recess → glass. Content is clipped to the glass. */
+/** The whole screen is the window: a thin bezel at the edges, the opening fills ~92% of the area. */
 export function AircraftWindowFrame({ children }: { children: ReactNode }) {
   return (
-    <div className="relative aspect-[0.7] h-full max-h-full">
-      <div className="absolute inset-0 window-shape window-bezel" />
-      <div className="absolute inset-[5%] window-shape window-recess" />
-      <div className="absolute inset-[7%] isolate overflow-hidden window-shape">
+    <div className="relative h-full w-full overflow-hidden window-bezel">
+      <div className="absolute inset-x-[1.6vw] inset-y-[2.2vh] isolate overflow-hidden window-opening">
         {children}
-        <div className="pointer-events-none absolute inset-0 z-30 scanlines opacity-40" />
-        <div className="pointer-events-none absolute inset-0 z-30 window-shape window-glass" />
+        <div className="pointer-events-none absolute inset-0 z-30 scanlines opacity-25" />
+        <div className="pointer-events-none absolute inset-0 z-30 window-opening window-glass" />
       </div>
     </div>
   );

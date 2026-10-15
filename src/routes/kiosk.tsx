@@ -34,7 +34,7 @@ function Kiosk() {
 
   return (
     <div className="h-screen w-screen cursor-none">
-      <VisitorDisplay state={state} kiosk />
+      <VisitorDisplay state={state} />
     </div>
   );
 }
