@@ -3,52 +3,48 @@ import type { VisitorEvent } from "@/services/mock-event-service";
 import { displayConfig } from "@/lib/display-config";
 import { VisitorFaceCapture } from "./VisitorFaceCapture";
 
-const fmtTime = (iso: string) => new Date(iso).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
-const fmtDate = (iso: string) => new Date(iso).toLocaleDateString([], { day: "2-digit", month: "short", year: "numeric" }).toUpperCase();
+const fmtTime = (iso: string) => new Date(iso).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false });
 
+/** Full-canvas greeting composed over the window view. */
 export function VisitorGreetingOverlay({ event, leaving }: { event: VisitorEvent; leaving: boolean }) {
   const isEntry = event.type === "ENTRY";
   const copy = isEntry ? displayConfig.entry : displayConfig.exit;
-  const accent = isEntry ? "entry" : "exit";
   const Icon = isEntry ? PlaneLanding : PlaneTakeoff;
+  const tag = isEntry ? "bg-entry" : "bg-exit";
 
   return (
-    <div className={`absolute inset-0 z-20 ${leaving ? "animate-greet-out" : ""}`}>
-      <div className="absolute inset-0 bg-gradient-to-b from-hud-ink/80 via-hud-ink/55 to-hud-ink/85 backdrop-blur-[2px]" />
-      <div className={`relative flex h-full flex-col px-[11%] pb-[17%] pt-[14%] ${isEntry ? "animate-greet-in" : "animate-greet-depart"}`}>
-        <div className="flex items-center justify-between font-mono text-[11px] uppercase tracking-[0.25em] hud-text">
-          <span className={`flex items-center gap-2 rounded-sm px-2 py-1 font-bold text-hud-ink ${isEntry ? "bg-entry" : "bg-exit"}`}>
-            <Icon className="h-3.5 w-3.5" /> {event.type}
+    <div className={`absolute inset-0 z-10 ${leaving ? "animate-greet-out" : ""}`}>
+      <div className="absolute inset-0 greeting-scrim" />
+      <div className={`absolute inset-x-[6vw] inset-y-[15vh] flex items-center gap-[4vw] hud-text ${isEntry ? "animate-greet-in" : "animate-greet-depart"}`}>
+        <div className="h-[58vh] max-h-[42vw] shrink-0 aspect-square">
+          <VisitorFaceCapture src={event.faceImageUrl} isDemo={event.isDemo} accent={isEntry ? "entry" : "exit"} />
+        </div>
+
+        <div className="min-w-0 flex-1">
+          <span className={`inline-flex items-center gap-[0.6vw] rounded-sm px-[0.8vw] py-[0.5vh] font-mono text-[1.5vh] font-bold uppercase tracking-[0.3em] text-hud-ink ${tag}`}>
+            <Icon className="h-[1.8vh] w-[1.8vh]" /> {event.type}
           </span>
-          <span>{fmtDate(event.timestamp)}</span>
-        </div>
-        <div className="mt-3 h-px hud-line" />
+          <h1 className="mt-[2.5vh] font-display text-[clamp(2.5rem,9vh,9rem)] font-bold leading-[0.92] tracking-tight">
+            {copy.headline}
+          </h1>
+          <p className="mt-[2.5vh] max-w-[40vw] text-[clamp(1rem,2.8vh,2.4rem)] font-medium text-hud/90">{copy.sub}</p>
 
-        <div className="mx-auto mt-[6%] w-[58%]">
-          <VisitorFaceCapture src={event.faceImageUrl} isDemo={event.isDemo} accent={accent} />
-        </div>
-
-        <h1 className="mt-[8%] text-center font-display text-[clamp(1.8rem,3.4vh,3.4rem)] font-bold leading-[1.02] tracking-tight hud-text">
-          {copy.headline}
-        </h1>
-        <p className="mt-3 text-center text-[clamp(0.9rem,1.6vh,1.4rem)] text-hud/85">{copy.sub}</p>
-
-        <div className="mt-auto">
-          <div className="h-px hud-line" />
-          <div className="mt-3 grid grid-cols-2 gap-y-1 font-mono text-[11px] uppercase tracking-[0.2em] hud-text">
-            <span className="text-hud/60">Time</span>
-            <span className="text-right">{fmtTime(event.timestamp)}</span>
-            <span className="text-hud/60">{isEntry ? "Entrance" : "Exit"}</span>
-            <span className="text-right">{event.stationLabel}</span>
-            {event.cameraLabel && (
-              <>
-                <span className="text-hud/60">Camera</span>
-                <span className="text-right">{event.cameraLabel}</span>
-              </>
-            )}
+          <div className="mt-[5vh] grid max-w-[42vw] grid-cols-3 gap-[2vw] border-t border-hud-dim pt-[2vh] font-mono uppercase">
+            <Field label="Time" value={fmtTime(event.timestamp)} />
+            <Field label={isEntry ? "Entrance" : "Exit"} value={event.stationLabel} />
+            {event.cameraLabel && <Field label="Camera" value={event.cameraLabel} />}
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function Field({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <div className="text-[1.1vh] tracking-[0.3em] text-hud/60">{label}</div>
+      <div className="mt-[0.6vh] text-[1.7vh] tracking-[0.15em]">{value}</div>
     </div>
   );
 }

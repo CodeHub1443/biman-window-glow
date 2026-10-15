@@ -4,14 +4,14 @@
  */
 const LOGO_SRC: string | null = null;
 
-export function BimanBrandHeader({ compact = false }: { compact?: boolean }) {
+export function BimanBrandHeader() {
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-[1vw] hud-text">
       {LOGO_SRC ? (
-        <img src={LOGO_SRC} alt="Biman Bangladesh Airlines" className={compact ? "h-10" : "h-14"} />
+        <img src={LOGO_SRC} alt="Biman Bangladesh Airlines" className="h-[6vh]" />
       ) : (
         <div
-          className={`flex items-center justify-center rounded-md border border-dashed border-primary/60 bg-primary/10 font-mono uppercase tracking-widest text-primary ${compact ? "h-10 px-3 text-[9px]" : "h-14 px-4 text-[10px]"}`}
+          className="flex h-[6vh] items-center justify-center rounded-md border border-dashed border-hud-dim px-[1vw] text-center font-mono text-[1.1vh] uppercase leading-tight tracking-widest hud-glass"
           aria-label="Biman logo placeholder"
         >
           Official logo
@@ -19,16 +19,10 @@ export function BimanBrandHeader({ compact = false }: { compact?: boolean }) {
           placeholder
         </div>
       )}
-      {!compact && (
-        <div className="leading-tight">
-          <div className="font-display text-lg font-semibold tracking-tight text-foreground">
-            Biman Bangladesh Airlines
-          </div>
-          <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
-            Visitor Greeting System
-          </div>
-        </div>
-      )}
+      <div className="leading-tight">
+        <div className="font-display text-[2.2vh] font-semibold tracking-tight">Biman Bangladesh Airlines</div>
+        <div className="font-mono text-[1.1vh] uppercase tracking-[0.3em] text-hud/70">The Airline of Bangladesh</div>
+      </div>
     </div>
   );
 }
