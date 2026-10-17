@@ -1,37 +1,45 @@
-# Biman Bangladesh Airlines — AI Visitor Greeting (Frontend)
+# Phase 2 — Operations Interface
 
-Frontend-only build with mock data, following your spec. Delivered in phases, starting with the airplane-window Visitor Display.
+The approved full-screen Visitor Display (`/`) and `/kiosk` stay untouched. New pages live inside a shared app shell.
 
-## Phase 1 — Design foundation + Visitor Display
-- Theme: dark (midnight green, charcoal, emerald glow) and light (ivory, deep green), switchable, saved per device.
-- Fonts: a precise display face (e.g. Space Grotesk) + mono for HUD readouts (JetBrains Mono).
-- Logo slot: a single `BimanBrandHeader` using a clearly marked placeholder until you upload the official logo (it will not be recreated). Always visible on every page and display state.
-- Visitor Display (inspired by your reference): large vertical rounded cabin window, layered bezel, cabin-wall texture, HUD lines (compass ticks, clock, coordinates, station code) over the view.
-  - Idle: `IdleWindowVideo` with configurable MP4/WebM source, autoplay/muted/loop, cover fit, fallback image, no controls. Placeholder clearly labelled.
-  - Entry: captured face, WELCOME ABOARD, "Welcome to Biman Bangladesh Airlines", ENTRY tag, time, station; ascending transition.
-  - Exit: face, THANK YOU FOR VISITING, goodbye line, EXIT tag; departure-style transition.
-  - State machine with queue, duplicate-ID suppression, configurable duration, missing-face fallback, crossfade (no black frames).
-  - Kiosk mode route with no navigation or demo controls; exit via a hidden key combo (Shift+Esc) in development.
-  - Demo controls (Idle / Simulate Entry / Simulate Exit) in normal mode only. Sample faces labelled "DEMO".
+## Navigation shell
+- Collapsible aviation-style side rail: Visitor Display, Operations Dashboard, Visitor Events, Dwell Time Analytics, System Health, Settings.
+- Logo placeholder always visible (rail header, collapsed shows compact mark), theme switch, UTC/Dhaka clock, "DEMO DATA" badge in top bar.
+- Mobile: rail becomes a slide-out sheet.
+- Visitor Display link opens the existing full-screen page; kiosk stays nav-free.
+- Settings: a styled placeholder page ("Coming in Phase 3") so the link works.
 
-## Phase 2 — App shell + Operations pages
-- Aviation navigation rail (collapsible, logo always visible), theme switcher.
-- Operations Dashboard: KPIs, entry vs exit chart, hourly activity, dwell distribution, recent events with thumbnails. "Demo data" labels.
-- Visitor Events: search, filters (date, type, camera, station), sort, pagination, detail drawer. No identity claims.
-- Dwell Time Analytics: avg/max/min, distribution, hourly/daily trends, unmatched counts, measured vs estimated distinction, CSV export.
-- System Health: Station 1 and 2 units (2 cameras, edge device, display, speaker each), PoE switch, simulated telemetry, error log. Labelled "Simulated — no hardware connected".
+## Operations Dashboard (`/dashboard`)
+- Hero strip: entries / exits / estimated occupancy in a large flight-board style readout.
+- Dwell panel: average and max dwell with a mini gauge.
+- System pulse: connected cameras (x/4) and overall health ring.
+- Charts: entry vs exit (area), hourly activity (bars), dwell distribution (histogram).
+- Recent events list with face thumbnails; station/camera status tiles. No live feeds.
 
-## Phase 3 — Settings workspace
-General, Camera Configuration (CRUD, masked RTSP, test, confirm delete), ROI Editor (polygon draw/move/delete points, entry/exit zones, virtual line + direction, saved vs unsaved), Debug Preview (the only live-stream area; manual start/stop, mock stream with FPS/latency, overlays), Greeting & Audio, Detection & Events, Device & Network, Visitor Display Settings (video source, fit, headlines, previews), Access & Audit layouts. Unconnected settings marked as such.
+## Visitor Events (`/events`)
+- Table: thumbnail, ENTRY/EXIT tag, timestamp, station, camera, processing status (processed, pending, failed, no face).
+- Date range, type, station, camera filters; search by event ID/camera; sort by column; pagination; filters kept in the URL.
+- Detail drawer with larger face, metadata, processing timeline. No names, no identity linking.
+
+## Dwell Time Analytics (`/analytics`)
+- Date range filter; avg/max/min; entry/exit totals.
+- Distribution, hourly and daily trend charts.
+- Clear split: Measured vs Estimated (provisional matching) with explanatory note; unmatched entries/exits counts.
+- CSV export of the filtered dataset.
+
+## System Health (`/health`)
+- Station 1 and Station 2 cards: Jetson edge device (heartbeat, CPU/GPU/temp/memory), entry + exit camera, display monitor, speaker set, event processing status.
+- Central PoE switch card with per-port status linking to each device.
+- Recent error log. Banner: DEMO DATA — NO HARDWARE CONNECTED. One device shown offline to demonstrate disconnected state.
+
+## Shared
+- Loading skeletons, empty states ("No events match"), error state with retry, disconnected state.
+- Dark and light themes across all pages; semantic tokens only.
 
 ## Technical details
-- TanStack routes: `/` (Visitor Display), `/kiosk`, `/dashboard`, `/events`, `/analytics`, `/health`, `/settings/*` sub-routes.
-- `src/services/` adapter interfaces (events, cameras, ROI, health, audio, analytics) with `MockEventService` implementations; swapped later for real backend without touching components.
-- `src/types/` TypeScript models; config held in a small store persisted to localStorage (mock saves).
-- Charts via recharts; shadcn components; all colors as semantic tokens.
-- Idle video path set in one config constant (`/videos/idle.mp4`), documented for replacement.
-- Generated assets: cinematic sky/wing fallback image, cabin wall texture, a few clearly labelled demo face illustrations.
-
-## Needed from you
-- Official Biman logo file (placeholder used until then).
-- Idle video (later).
+- Routes: `_app.tsx`-free; shell as a pathless layout `src/routes/_ops.tsx` (renders `<Outlet />`) with children `_ops.dashboard.tsx`, `_ops.events.tsx`, `_ops.analytics.tsx`, `_ops.health.tsx`, `_ops.settings.tsx`. Each with its own head().
+- `src/types/` models: VisitorEventRecord, DwellRecord, Station, Camera, DeviceHealth.
+- `src/services/`: `EventHistoryService`, `AnalyticsService`, `HealthService` interfaces + mock implementations (seeded deterministic generator, simulated latency); components use them via TanStack Query.
+- Recharts for charts; shadcn sheet/table/select/calendar; CSV built client-side.
+- Tests: filter/sort/pagination logic, dwell stats (measured vs estimated), CSV output.
+- Verify in browser: all routes, both themes, filters/drawer, CSV download, and that `/` is unchanged.
