@@ -10,11 +10,21 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as OpsRouteImport } from './routes/_ops'
 import { Route as KioskRouteImport } from './routes/kiosk'
+import { Route as OpsAnalyticsRouteImport } from './routes/_ops.analytics'
+import { Route as OpsDashboardRouteImport } from './routes/_ops.dashboard'
+import { Route as OpsEventsRouteImport } from './routes/_ops.events'
+import { Route as OpsHealthRouteImport } from './routes/_ops.health'
+import { Route as OpsSettingsRouteImport } from './routes/_ops.settings'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OpsRoute = OpsRouteImport.update({
+  id: '/_ops',
   getParentRoute: () => rootRouteImport,
 } as any)
 const KioskRoute = KioskRouteImport.update({
@@ -22,30 +32,95 @@ const KioskRoute = KioskRouteImport.update({
   path: '/kiosk',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OpsAnalyticsRoute = OpsAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => OpsRoute,
+} as any)
+const OpsDashboardRoute = OpsDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => OpsRoute,
+} as any)
+const OpsEventsRoute = OpsEventsRouteImport.update({
+  id: '/events',
+  path: '/events',
+  getParentRoute: () => OpsRoute,
+} as any)
+const OpsHealthRoute = OpsHealthRouteImport.update({
+  id: '/health',
+  path: '/health',
+  getParentRoute: () => OpsRoute,
+} as any)
+const OpsSettingsRoute = OpsSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => OpsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/kiosk': typeof KioskRoute
+  '/analytics': typeof OpsAnalyticsRoute
+  '/dashboard': typeof OpsDashboardRoute
+  '/events': typeof OpsEventsRoute
+  '/health': typeof OpsHealthRoute
+  '/settings': typeof OpsSettingsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/kiosk': typeof KioskRoute
+  '/analytics': typeof OpsAnalyticsRoute
+  '/dashboard': typeof OpsDashboardRoute
+  '/events': typeof OpsEventsRoute
+  '/health': typeof OpsHealthRoute
+  '/settings': typeof OpsSettingsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_ops': typeof OpsRouteWithChildren
   '/kiosk': typeof KioskRoute
+  '/_ops/analytics': typeof OpsAnalyticsRoute
+  '/_ops/dashboard': typeof OpsDashboardRoute
+  '/_ops/events': typeof OpsEventsRoute
+  '/_ops/health': typeof OpsHealthRoute
+  '/_ops/settings': typeof OpsSettingsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/kiosk'
+  fullPaths:
+    | '/'
+    | '/kiosk'
+    | '/analytics'
+    | '/dashboard'
+    | '/events'
+    | '/health'
+    | '/settings'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/kiosk'
-  id: '__root__' | '/' | '/kiosk'
+  to:
+    | '/'
+    | '/kiosk'
+    | '/analytics'
+    | '/dashboard'
+    | '/events'
+    | '/health'
+    | '/settings'
+  id:
+    | '__root__'
+    | '/'
+    | '/_ops'
+    | '/kiosk'
+    | '/_ops/analytics'
+    | '/_ops/dashboard'
+    | '/_ops/events'
+    | '/_ops/health'
+    | '/_ops/settings'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  OpsRoute: typeof OpsRouteWithChildren
   KioskRoute: typeof KioskRoute
 }
 
@@ -58,6 +133,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_ops': {
+      id: '/_ops'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof OpsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/kiosk': {
       id: '/kiosk'
       path: '/kiosk'
@@ -65,11 +147,65 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof KioskRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_ops/analytics': {
+      id: '/_ops/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof OpsAnalyticsRouteImport
+      parentRoute: typeof OpsRoute
+    }
+    '/_ops/dashboard': {
+      id: '/_ops/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof OpsDashboardRouteImport
+      parentRoute: typeof OpsRoute
+    }
+    '/_ops/events': {
+      id: '/_ops/events'
+      path: '/events'
+      fullPath: '/events'
+      preLoaderRoute: typeof OpsEventsRouteImport
+      parentRoute: typeof OpsRoute
+    }
+    '/_ops/health': {
+      id: '/_ops/health'
+      path: '/health'
+      fullPath: '/health'
+      preLoaderRoute: typeof OpsHealthRouteImport
+      parentRoute: typeof OpsRoute
+    }
+    '/_ops/settings': {
+      id: '/_ops/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof OpsSettingsRouteImport
+      parentRoute: typeof OpsRoute
+    }
   }
 }
 
+interface OpsRouteChildren {
+  OpsAnalyticsRoute: typeof OpsAnalyticsRoute
+  OpsDashboardRoute: typeof OpsDashboardRoute
+  OpsEventsRoute: typeof OpsEventsRoute
+  OpsHealthRoute: typeof OpsHealthRoute
+  OpsSettingsRoute: typeof OpsSettingsRoute
+}
+
+const OpsRouteChildren: OpsRouteChildren = {
+  OpsAnalyticsRoute: OpsAnalyticsRoute,
+  OpsDashboardRoute: OpsDashboardRoute,
+  OpsEventsRoute: OpsEventsRoute,
+  OpsHealthRoute: OpsHealthRoute,
+  OpsSettingsRoute: OpsSettingsRoute,
+}
+
+const OpsRouteWithChildren = OpsRoute._addFileChildren(OpsRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  OpsRoute: OpsRouteWithChildren,
   KioskRoute: KioskRoute,
 }
 export const routeTree = rootRouteImport
