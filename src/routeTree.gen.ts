@@ -10,11 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as OpsRouteImport } from './routes/_ops'
 import { Route as KioskRouteImport } from './routes/kiosk'
+import { Route as OpsSettingsRouteImport } from './routes/_ops.settings'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OpsRoute = OpsRouteImport.update({
+  id: '/_ops',
   getParentRoute: () => rootRouteImport,
 } as any)
 const KioskRoute = KioskRouteImport.update({
@@ -22,30 +28,40 @@ const KioskRoute = KioskRouteImport.update({
   path: '/kiosk',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OpsSettingsRoute = OpsSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => OpsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/kiosk': typeof KioskRoute
+  '/settings': typeof OpsSettingsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/kiosk': typeof KioskRoute
+  '/settings': typeof OpsSettingsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_ops': typeof OpsRouteWithChildren
   '/kiosk': typeof KioskRoute
+  '/_ops/settings': typeof OpsSettingsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/kiosk'
+  fullPaths: '/' | '/kiosk' | '/settings'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/kiosk'
-  id: '__root__' | '/' | '/kiosk'
+  to: '/' | '/kiosk' | '/settings'
+  id: '__root__' | '/' | '/_ops' | '/kiosk' | '/_ops/settings'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  OpsRoute: typeof OpsRouteWithChildren
   KioskRoute: typeof KioskRoute
 }
 
@@ -58,6 +74,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_ops': {
+      id: '/_ops'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof OpsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/kiosk': {
       id: '/kiosk'
       path: '/kiosk'
@@ -65,11 +88,29 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof KioskRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_ops/settings': {
+      id: '/_ops/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof OpsSettingsRouteImport
+      parentRoute: typeof OpsRoute
+    }
   }
 }
 
+interface OpsRouteChildren {
+  OpsSettingsRoute: typeof OpsSettingsRoute
+}
+
+const OpsRouteChildren: OpsRouteChildren = {
+  OpsSettingsRoute: OpsSettingsRoute,
+}
+
+const OpsRouteWithChildren = OpsRoute._addFileChildren(OpsRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  OpsRoute: OpsRouteWithChildren,
   KioskRoute: KioskRoute,
 }
 export const routeTree = rootRouteImport
