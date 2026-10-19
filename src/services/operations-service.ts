@@ -108,8 +108,8 @@ export const mockHealthService: HealthService = {
         devices: [
           dev({ id: `EDGE-${n}`, kind: "edge", label: `Edge device ${n}`, model: "NVIDIA Jetson", status: "online", port: n * 4 - 3,
             metrics: { cpu: jitter(38 + i * 12, 14), gpu: jitter(52 + i * 8, 18), mem: jitter(61, 8), tempC: jitter(54 + i * 4, 4) } }),
-          dev({ id: st.cameras[0].id, kind: "camera", label: `${st.cameras[0].label}`, model: "PoE IP camera", status: "online", port: n * 4 - 2, detail: "25 fps · 1080p" }),
-          dev({ id: st.cameras[1].id, kind: "camera", label: `${st.cameras[1].label}`, model: "PoE IP camera", status: n === 2 ? "degraded" : "online", port: n * 4 - 1,
+          dev({ id: st.cameras[0]!.id, kind: "camera", label: `${st.cameras[0]!.label}`, model: "PoE IP camera", status: "online", port: n * 4 - 2, detail: "25 fps · 1080p" }),
+          dev({ id: st.cameras[1]!.id, kind: "camera", label: `${st.cameras[1]!.label}`, model: "PoE IP camera", status: n === 2 ? "degraded" : "online", port: n * 4 - 1,
             detail: n === 2 ? "Frame drops 6%" : "25 fps · 1080p" }),
           dev({ id: `DISP-${n}`, kind: "display", label: `Visitor display ${n}`, model: "Display monitor", status: "online", detail: "HDMI · 1920×1080" }),
           dev({ id: `SPK-${n}`, kind: "speaker", label: `Speaker set ${n}`, model: "Speaker set", status: speakerDown ? "offline" : "online",

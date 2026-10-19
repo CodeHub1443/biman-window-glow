@@ -74,7 +74,7 @@ export function generateDataset(now: number, faces: string[], days = 14, seed = 
     return r < 0.9 ? "processed" : r < 0.94 ? "no_face" : r < 0.97 ? "pending" : "failed";
   };
   const mk = (type: "ENTRY" | "EXIT", ts: number, st: Station): VisitorEventRecord => {
-    const cam = st.cameras[type === "ENTRY" ? 0 : 1];
+    const cam = st.cameras[type === "ENTRY" ? 0 : 1]!;
     const status = pickStatus();
     n += 1;
     return {
@@ -97,9 +97,9 @@ export function generateDataset(now: number, faces: string[], days = 14, seed = 
     const dayStart = today - d * DAY;
     const dayScale = 0.7 + rand() * 0.6;
     for (let h = 8; h <= 19; h++) {
-      const count = Math.round(6 * HOURLY_PROFILE[h] * dayScale * (0.6 + rand() * 0.8));
+      const count = Math.round(6 * HOURLY_PROFILE[h]! * dayScale * (0.6 + rand() * 0.8));
       for (let i = 0; i < count; i++) {
-        const st = STATIONS[rand() < 0.62 ? 0 : 1];
+        const st = STATIONS[rand() < 0.62 ? 0 : 1]!;
         const entryAt = dayStart + h * HOUR + Math.floor(rand() * HOUR);
         if (entryAt > now) continue;
         const entry = mk("ENTRY", entryAt, st);
@@ -124,7 +124,7 @@ export function generateDataset(now: number, faces: string[], days = 14, seed = 
       // occasional exit with no matching entry
       if (rand() < 0.25) {
         const ts = dayStart + h * HOUR + Math.floor(rand() * HOUR);
-        if (ts <= now) events.push(mk("EXIT", ts, STATIONS[rand() < 0.5 ? 0 : 1]));
+        if (ts <= now) events.push(mk("EXIT", ts, STATIONS[rand() < 0.5 ? 0 : 1]!));
       }
     }
   }
