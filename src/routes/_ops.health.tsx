@@ -75,7 +75,7 @@ function HealthPage() {
       <div role="status" className="mb-5 flex items-center gap-3 rounded-lg border border-gold/60 bg-gold/10 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.2em]">
         <AlertTriangle className="h-4 w-4" /> Demo data — no hardware connected
       </div>
-      <PageHeader eyebrow="SYS · Health" title="System Health" description={`Two stations and one central PoE switch. Simulated telemetry refreshes every 5 seconds (last ${formatTime(data.generatedAt)}).`} />
+      <PageHeader eyebrow="SYS · Health" title="System Health" description={`Two stations and one central PoE switch. Station and camera names are demo placeholders; the offline speaker is simulated. Simulated telemetry refreshes every 5 seconds (last ${formatTime(data.generatedAt)}).`} />
 
       <div className="grid gap-4 xl:grid-cols-2">
         {data.stations.map((s) => (

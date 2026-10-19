@@ -100,7 +100,7 @@ function AnalyticsPage() {
       <div className="mb-4 flex gap-3 rounded-lg border border-border bg-muted/40 p-3 text-sm">
         <Info className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
         <p>
-          <strong>Measured</strong> dwell comes from an entry and exit linked by one continuous tracking session at a station.{" "}
+          <strong>Measured</strong> dwell is counted only when an entry and exit are linked by one continuous tracking session at a station. Unmatched entries and exits are never counted as dwell.{" "}
           <strong>Estimated</strong> dwell is a provisional pairing by time order only. The system does not recognise identities, so estimated pairs may not be the same visitor. The two are never combined.
         </p>
       </div>

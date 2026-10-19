@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { computeDwellStats, filterEvents, generateDataset, paginate, sortEvents, toCsv } from "@/lib/ops-data";
+import { computeDwellStats, dwellCsv, DWELL_CSV_COLUMNS, filterEvents, generateDataset, paginate, sortEvents, toCsv } from "@/lib/ops-data";
 import type { DwellRecord, EventFilters, VisitorEventRecord } from "@/types/operations";
 
 const ev = (id: string, type: "ENTRY" | "EXIT", ts: number, stationId = "S1", cameraId = "CAM-1E"): VisitorEventRecord => ({
@@ -30,7 +30,7 @@ describe("pagination", () => {
 
 describe("dwell stats", () => {
   const events = [ev("E1", "ENTRY", T), ev("X1", "EXIT", T), ev("E2", "ENTRY", T), ev("X2", "EXIT", T), ev("E3", "ENTRY", T), ev("X9", "EXIT", T)];
-  const dw = (id: string, e: string, x: string, sec: number, kind: "measured" | "estimated"): DwellRecord => ({ id, stationId: "S1", entryEventId: e, exitEventId: x, entryAt: T, exitAt: T + sec * 1000, durationSec: sec, kind });
+  const dw = (id: string, e: string, x: string, sec: number, kind: "measured" | "estimated"): DwellRecord => ({ id, stationId: "S1", entryEventId: e, exitEventId: x, entryAt: T, exitAt: T + sec * 1000, durationSec: sec, kind, trackingSessionId: kind === "measured" ? `TRK-${id}` : null });
   const s = computeDwellStats([dw("D1", "E1", "X1", 600, "measured"), dw("D2", "E2", "X2", 1800, "estimated")], events);
   it("keeps measured and estimated separate", () => {
     expect(s.measured).toEqual({ count: 1, avgSec: 600, maxSec: 600, minSec: 600 });
@@ -52,5 +52,29 @@ describe("demo generator", () => {
     const b = generateDataset(T, ["f"]);
     expect(a.events.length).toBe(b.events.length);
     expect(a.events.every((e) => e.timestamp <= T && e.isDemo)).toBe(true);
+  });
+});
+
+describe("measured dwell needs a tracking session", () => {
+  const base = { stationId: "S1", entryEventId: "E1", exitEventId: "X1", entryAt: T, exitAt: T + 60_000, durationSec: 60 };
+  it("treats a 'measured' record without a session as estimated", () => {
+    const s = computeDwellStats([{ ...base, id: "D1", kind: "measured", trackingSessionId: null }], []);
+    expect(s.measured.count).toBe(0);
+    expect(s.estimated.count).toBe(1);
+  });
+  it("generated measured records always carry a session", () => {
+    const { dwell } = generateDataset(T, ["f"]);
+    expect(dwell.filter((r) => r.kind === "measured").every((r) => r.trackingSessionId)).toBe(true);
+    expect(dwell.filter((r) => r.kind === "estimated").every((r) => r.trackingSessionId === null)).toBe(true);
+  });
+});
+
+describe("dwell csv export", () => {
+  it("writes one row per given record with the declared columns", () => {
+    const rec = { id: "D1", stationId: "S1", entryEventId: "E1", exitEventId: "X1", entryAt: T, exitAt: T + 90_000, durationSec: 90, kind: "estimated" as const, trackingSessionId: null };
+    const lines = dwellCsv([rec]).split("\r\n");
+    expect(lines).toHaveLength(2);
+    expect(lines[0]).toBe(DWELL_CSV_COLUMNS.join(","));
+    expect(lines[1]).toBe("D1,Station 1 · Main Lobby (demo placeholder),E1,X1,2026-10-17T06:00:00.000Z,2026-10-17T06:01:30.000Z,1.5,estimated,,yes");
   });
 });
