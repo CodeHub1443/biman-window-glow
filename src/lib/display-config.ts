@@ -7,7 +7,8 @@ import fallbackImage from "@/assets/window-sky-wide.jpg";
 
 export const displayConfig = {
   idleVideo: {
-    mp4: "/videos/idle.mp4" as string | undefined,
+    // No idle video supplied yet: undefined shows the designed fallback image with no failed request.
+    mp4: undefined as string | undefined, // e.g. "/videos/idle.mp4"
     webm: undefined as string | undefined,
     fallbackImage,
     fit: "cover" as "cover" | "contain",

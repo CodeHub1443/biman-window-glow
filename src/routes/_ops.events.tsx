@@ -97,7 +97,7 @@ function EventsPage() {
 
   return (
     <>
-      <PageHeader eyebrow="EVT · History" title="Visitor Events" description="Each row is a single detection. Events are not linked to named people." actions={<DemoTag />} />
+      <PageHeader eyebrow="EVT · History" title="Visitor Events" description="Each row is a single detection. Events are not linked to named people. Station and camera names are demo placeholders, not confirmed installation names." actions={<DemoTag />} />
 
       <div className="mb-4 flex flex-wrap items-end gap-2 rounded-lg border border-border bg-card p-3">
         <label className="flex flex-col gap-1 text-xs text-muted-foreground">Search

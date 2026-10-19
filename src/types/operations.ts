@@ -45,6 +45,8 @@ export interface DwellRecord {
   exitAt: number;
   durationSec: number;
   kind: "measured" | "estimated";
+  /** Set only for measured pairs: the continuous tracking session that linked entry and exit. */
+  trackingSessionId: string | null;
 }
 
 export interface DateRange {

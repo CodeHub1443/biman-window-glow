@@ -6,7 +6,7 @@ import { Download, Info } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, Legend, Line, ComposedChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { axis, chartTooltip, DemoTag, EmptyState, field, ghostBtn, PageError, PageHeader, PageSkeleton, Panel } from "@/components/ops/ui";
 import { analyticsQuery } from "@/lib/ops-queries";
-import { dhakaDateKey, formatDuration, STATIONS, toCsv } from "@/lib/ops-data";
+import { dhakaDateKey, dwellCsv, formatDuration } from "@/lib/ops-data";
 import type { DwellStatsBlock } from "@/types/operations";
 
 const searchSchema = z.object({
@@ -57,11 +57,7 @@ function AnalyticsPage() {
   const setRange = (p: Partial<typeof range>) => navigate({ to: ".", search: (prev) => ({ ...prev, ...p }) });
 
   const exportCsv = () => {
-    const station = (id: string) => STATIONS.find((x) => x.id === id)?.label ?? id;
-    const csv = toCsv(
-      ["record_id", "station", "entry_event_id", "exit_event_id", "entry_time_utc", "exit_time_utc", "dwell_minutes", "dwell_kind", "demo_data"],
-      data.records.map((r) => [r.id, station(r.stationId), r.entryEventId, r.exitEventId, new Date(r.entryAt).toISOString(), new Date(r.exitAt).toISOString(), (r.durationSec / 60).toFixed(1), r.kind, "yes"]),
-    );
+    const csv = dwellCsv(data.records);
     const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
     const a = document.createElement("a");
     a.href = url;
@@ -104,7 +100,7 @@ function AnalyticsPage() {
       <div className="mb-4 flex gap-3 rounded-lg border border-border bg-muted/40 p-3 text-sm">
         <Info className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
         <p>
-          <strong>Measured</strong> dwell comes from an entry and exit linked by one continuous tracking session at a station.{" "}
+          <strong>Measured</strong> dwell is counted only when an entry and exit are linked by one continuous tracking session at a station. Unmatched entries and exits are never counted as dwell.{" "}
           <strong>Estimated</strong> dwell is a provisional pairing by time order only. The system does not recognise identities, so estimated pairs may not be the same visitor. The two are never combined.
         </p>
       </div>

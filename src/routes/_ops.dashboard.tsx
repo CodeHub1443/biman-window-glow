@@ -147,7 +147,7 @@ function Dashboard() {
             </ul>
           )}
         </Panel>
-        <Panel title="Stations">
+        <Panel title="Stations" meta={<DemoTag>Placeholder names</DemoTag>}>
           <div className="space-y-4">
             {health.stations.map((s) => (
               <div key={s.station.id} className="rounded-md border border-border p-3">
