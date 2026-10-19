@@ -70,7 +70,7 @@ export function TypeTag({ type }: { type: "ENTRY" | "EXIT" }) {
   );
 }
 
-export function FaceThumb({ src, size = 40 }: { src?: string; size?: number }) {
+export function FaceThumb({ src, size = 40 }: { src?: string | undefined; size?: number }) {
   return src ? (
     <img src={src} alt="Captured face (demo)" width={size} height={size} className="rounded-md object-cover ring-1 ring-border" style={{ width: size, height: size }} />
   ) : (

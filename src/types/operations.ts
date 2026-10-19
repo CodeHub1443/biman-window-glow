@@ -24,7 +24,7 @@ export interface VisitorEventRecord {
   stationLabel: string;
   cameraId: string;
   cameraLabel: string;
-  faceImageUrl?: string;
+  faceImageUrl?: string | undefined;
   status: ProcessingStatus;
   detectionConfidence: number; // 0–1, face detection confidence (not identity)
   processingMs: number;
