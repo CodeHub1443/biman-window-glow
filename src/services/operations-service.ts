@@ -6,7 +6,7 @@ import face1 from "@/assets/demo-face-1.jpg";
 import face2 from "@/assets/demo-face-2.jpg";
 import {
   STATIONS, computeDwellStats, dailyCounts, dhakaDateKey, dhakaMidnight, dwellHistogram, filterEvents,
-  generateDataset, hourlyCounts, inRange, paginate, sortEvents, type Dataset,
+  generateDataset, hourlyCounts, inRange, isMeasured, paginate, sortEvents, type Dataset,
 } from "@/lib/ops-data";
 import type {
   AnalyticsReport, DashboardSummary, DateRange, DeviceHealth, EventQuery, HealthSnapshot, HealthStatus,
@@ -53,7 +53,7 @@ export const mockAnalyticsService: AnalyticsService = {
     const todayEvents = events.filter((e) => dhakaDateKey(e.timestamp) === todayKey);
     const entries = todayEvents.filter((e) => e.type === "ENTRY").length;
     const exits = todayEvents.length - entries;
-    const measured = dwell.filter((r) => r.kind === "measured" && dhakaDateKey(r.entryAt) === todayKey);
+    const measured = dwell.filter((r) => isMeasured(r) && dhakaDateKey(r.entryAt) === todayKey);
     const stats = computeDwellStats(measured, []);
     const weekStart = dhakaMidnight(Date.now()) - 6 * 86_400_000;
     return {
@@ -72,7 +72,7 @@ export const mockAnalyticsService: AnalyticsService = {
     const ev = events.filter((e) => inRange(e.timestamp, range));
     const dw = dwell.filter((r) => inRange(r.entryAt, range));
     const byDay = new Map<string, number[]>();
-    for (const r of dw) if (r.kind === "measured") {
+    for (const r of dw) if (isMeasured(r)) {
       const k = dhakaDateKey(r.entryAt);
       byDay.set(k, [...(byDay.get(k) ?? []), r.durationSec]);
     }

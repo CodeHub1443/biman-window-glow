@@ -6,7 +6,7 @@ import { Download, Info } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, Legend, Line, ComposedChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { axis, chartTooltip, DemoTag, EmptyState, field, ghostBtn, PageError, PageHeader, PageSkeleton, Panel } from "@/components/ops/ui";
 import { analyticsQuery } from "@/lib/ops-queries";
-import { dhakaDateKey, formatDuration, STATIONS, toCsv } from "@/lib/ops-data";
+import { dhakaDateKey, dwellCsv, formatDuration } from "@/lib/ops-data";
 import type { DwellStatsBlock } from "@/types/operations";
 
 const searchSchema = z.object({
@@ -57,11 +57,7 @@ function AnalyticsPage() {
   const setRange = (p: Partial<typeof range>) => navigate({ to: ".", search: (prev) => ({ ...prev, ...p }) });
 
   const exportCsv = () => {
-    const station = (id: string) => STATIONS.find((x) => x.id === id)?.label ?? id;
-    const csv = toCsv(
-      ["record_id", "station", "entry_event_id", "exit_event_id", "entry_time_utc", "exit_time_utc", "dwell_minutes", "dwell_kind", "demo_data"],
-      data.records.map((r) => [r.id, station(r.stationId), r.entryEventId, r.exitEventId, new Date(r.entryAt).toISOString(), new Date(r.exitAt).toISOString(), (r.durationSec / 60).toFixed(1), r.kind, "yes"]),
-    );
+    const csv = dwellCsv(data.records);
     const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
     const a = document.createElement("a");
     a.href = url;

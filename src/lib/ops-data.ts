@@ -118,7 +118,9 @@ export function generateDataset(now: number, faces: string[], days = 14, seed = 
           entryAt,
           exitAt,
           durationSec,
-          kind: rand() < 0.7 ? "measured" : "estimated",
+          ...(rand() < 0.7
+            ? { kind: "measured" as const, trackingSessionId: `TRK-${st.id}-${entry.id.slice(-5)}` }
+            : { kind: "estimated" as const, trackingSessionId: null }),
         });
       }
       // occasional exit with no matching entry
@@ -179,6 +181,9 @@ function block(recs: DwellRecord[]): DwellStatsBlock {
   };
 }
 
+/** Measured requires a tracking session; anything else is treated as estimated. */
+export const isMeasured = (r: DwellRecord) => r.kind === "measured" && !!r.trackingSessionId;
+
 /** Measured and estimated dwell are always reported separately, never blended. */
 export function computeDwellStats(dwell: DwellRecord[], events: VisitorEventRecord[]): DwellStats {
   const pairedEntries = new Set(dwell.map((r) => r.entryEventId));
@@ -186,8 +191,8 @@ export function computeDwellStats(dwell: DwellRecord[], events: VisitorEventReco
   const entries = events.filter((e) => e.type === "ENTRY");
   const exits = events.filter((e) => e.type === "EXIT");
   return {
-    measured: block(dwell.filter((r) => r.kind === "measured")),
-    estimated: block(dwell.filter((r) => r.kind === "estimated")),
+    measured: block(dwell.filter(isMeasured)),
+    estimated: block(dwell.filter((r) => !isMeasured(r))),
     entries: entries.length,
     exits: exits.length,
     unmatchedEntries: entries.filter((e) => !pairedEntries.has(e.id)).length,
@@ -202,7 +207,7 @@ const BUCKETS: [string, number, number][] = [
 export function dwellHistogram(dwell: DwellRecord[]): DwellBucket[] {
   return BUCKETS.map(([label, lo, hi]) => {
     const inB = dwell.filter((r) => r.durationSec >= lo && r.durationSec < hi);
-    return { label, measured: inB.filter((r) => r.kind === "measured").length, estimated: inB.filter((r) => r.kind === "estimated").length };
+    return { label, measured: inB.filter(isMeasured).length, estimated: inB.filter((r) => !isMeasured(r)).length };
   });
 }
 
@@ -248,3 +253,12 @@ const dtf = new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Dhaka", day: "2-d
 const tf = new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Dhaka", hour: "2-digit", minute: "2-digit", hour12: false });
 export const formatDateTime = (ts: number) => dtf.format(ts);
 export const formatTime = (ts: number) => tf.format(ts);
+
+export const DWELL_CSV_COLUMNS = ["record_id", "station", "entry_event_id", "exit_event_id", "entry_time_utc", "exit_time_utc", "dwell_minutes", "dwell_kind", "tracking_session_id", "demo_data"];
+export function dwellCsv(records: DwellRecord[]) {
+  const station = (id: string) => STATIONS.find((x) => x.id === id)?.label ?? id;
+  return toCsv(
+    DWELL_CSV_COLUMNS,
+    records.map((r) => [r.id, `${station(r.stationId)} (demo placeholder)`, r.entryEventId, r.exitEventId, new Date(r.entryAt).toISOString(), new Date(r.exitAt).toISOString(), (r.durationSec / 60).toFixed(1), isMeasured(r) ? "measured" : "estimated", r.trackingSessionId ?? "", "yes"]),
+  );
+}
