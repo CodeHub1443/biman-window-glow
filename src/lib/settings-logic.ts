@@ -237,10 +237,14 @@ export function parseRtspUrl(url: string): ParsedRtsp | null {
 
 /** Moves credentials typed into the URL out into separate fields so they are never shown in the URL. */
 export function extractCredentials(url: string): { url: string; username: string; password: string; extracted: boolean } {
-  const p = parseRtspUrl(url);
-  if (!p || (!p.username && !p.password)) return { url, username: "", password: "", extracted: false };
-  const portPart = /:\d+/.test(url.split("@")[1] ?? "") ? `:${p.port}` : "";
-  return { url: `${p.scheme}://${p.host}${portPart}${p.path === "/" && !url.trim().endsWith("/") ? "" : p.path}`, username: p.username, password: p.password, extracted: true };
+  const m = RTSP_RE.exec(url.trim());
+  if (!m || (!m[2] && !m[3])) return { url, username: "", password: "", extracted: false };
+  return {
+    url: `${m[1]!.toLowerCase()}://${m[4]}${m[5] ? `:${m[5]}` : ""}${m[6] ?? ""}`,
+    username: decodeURIComponent(m[2] ?? ""),
+    password: decodeURIComponent(m[3] ?? ""),
+    extracted: true,
+  };
 }
 
 export const MASK = "••••••••";
