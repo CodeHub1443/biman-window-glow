@@ -99,7 +99,7 @@ function CamerasPage() {
               const hk = lastKnown(c.id);
               const r = results[c.id];
               return (
-                <li key={c.id} className="grid gap-3 py-4 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_auto] lg:items-center">
+                <li key={c.id} className="grid gap-3 py-4 md:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] md:items-start">
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="font-mono text-xs text-muted-foreground">{c.id}</span>
@@ -113,11 +113,11 @@ function CamerasPage() {
                     </div>
                   </div>
                   <div className="space-y-1 text-sm">
-                    <div className="flex items-center gap-2"><span className="text-muted-foreground">Last-known (demo):</span>{hk ? <StatusPill status={hk.status} /> : <span className="font-mono text-[11px] uppercase text-muted-foreground">unknown</span>}</div>
+                    <div className="flex flex-wrap items-center gap-2"><span className="whitespace-nowrap text-muted-foreground">Last-known (demo):</span>{hk ? <StatusPill status={hk.status} /> : <span className="font-mono text-[11px] uppercase text-muted-foreground">unknown</span>}</div>
                     {hk?.detail && <div className="font-mono text-[11px] text-muted-foreground">{hk.detail}</div>}
                     {r && <div className={`font-mono text-[11px] ${r.ok ? "text-primary" : "text-destructive"}`}>Simulated test: {r.ok ? "passed" : `failed (${r.stage})`}</div>}
                   </div>
-                  <div className="flex flex-wrap items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2 md:col-span-2">
                     <label className="flex items-center gap-2 text-xs text-muted-foreground">
                       <Switch checked={c.enabled} disabled={toggle.isPending} onCheckedChange={(v) => toggle.mutate({ id: c.id, enabled: v })} aria-label={`${c.enabled ? "Disable" : "Enable"} ${c.id}`} />
                       {c.enabled ? "On" : "Off"}
@@ -129,7 +129,7 @@ function CamerasPage() {
                     <button onClick={() => setEditing({ mode: "update", camera: c })} className={ghostBtn} aria-label={`Edit ${c.id}`}><Pencil className="h-4 w-4" />Edit</button>
                     <button onClick={() => setDeleting(c)} className={`${ghostBtn} text-destructive`} aria-label={`Delete ${c.id}`}><Trash2 className="h-4 w-4" /></button>
                   </div>
-                  {r && <div className="lg:col-span-3"><TestResult r={r} /></div>}
+                  {r && <div className="md:col-span-2"><TestResult r={r} /></div>}
                 </li>
               );
             })}

@@ -84,7 +84,7 @@ function RoiForm({ saved, role }: { saved: RoiConfig; role: "entry" | "exit" }) 
 
   return (
     <>
-      <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_320px]">
+      <div className="grid gap-4 2xl:grid-cols-[minmax(0,1fr)_320px]">
         <div className="space-y-3">
           <div className="flex flex-wrap items-center gap-2" role="toolbar" aria-label="ROI tools">
             <div className="inline-flex rounded-md border border-border p-0.5">
@@ -122,7 +122,7 @@ function RoiForm({ saved, role }: { saved: RoiConfig; role: "entry" | "exit" }) 
           <WarningList warnings={form.warnings} />
         </div>
 
-        <div className="space-y-4">
+        <div className="grid gap-4 md:grid-cols-2 2xl:block 2xl:space-y-4">
           <Panel title="Zones">
             {d.zones.length === 0 ? <p className="text-sm text-muted-foreground">No zones yet. Add an entry or exit zone.</p> : (
               <ul className="space-y-1">
