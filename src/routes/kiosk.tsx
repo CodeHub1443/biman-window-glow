@@ -1,9 +1,9 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { VisitorDisplay } from "@/components/VisitorDisplay";
+import { useDisplayConfig } from "@/hooks/use-display-config";
 import { useVisitorDisplay } from "@/hooks/use-visitor-display";
 import { mockEventService } from "@/services/mock-event-service";
-import { displayConfig } from "@/lib/display-config";
 
 export const Route = createFileRoute("/kiosk")({
   head: () => ({
@@ -20,7 +20,8 @@ export const Route = createFileRoute("/kiosk")({
 });
 
 function Kiosk() {
-  const { state } = useVisitorDisplay(mockEventService, displayConfig.greetingDurationMs);
+  const { config } = useDisplayConfig();
+  const { state } = useVisitorDisplay(mockEventService, config.greetingDurationMs);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,7 +35,7 @@ function Kiosk() {
 
   return (
     <div className="h-screen w-screen cursor-none">
-      <VisitorDisplay state={state} />
+      <VisitorDisplay state={state} config={config} />
     </div>
   );
 }
