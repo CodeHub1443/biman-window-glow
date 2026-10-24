@@ -52,7 +52,10 @@ function AccessPage() {
   // Sensitive changes go through a confirmation step; rules are checked before asking.
   const propose = (p: Pending) => {
     const err = validateOperators(p.list);
-    if (err) return toast.error("Change not allowed", { description: err });
+    if (err) {
+      toast.error("Change not allowed", { description: err });
+      return;
+    }
     setPending(p);
   };
 

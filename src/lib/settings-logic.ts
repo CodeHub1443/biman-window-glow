@@ -279,13 +279,13 @@ export function validateCamera(c: CameraInput, all: CameraConfig[], stationIds: 
   const warnings: string[] = [];
   text(errors, "name", c.name, 2, 40, "Camera name");
   text(errors, "location", c.location, 2, 60, "Location");
-  if (all.some((o) => o.id !== c.id && o.name.trim().toLowerCase() === c.name.trim().toLowerCase())) errors.name = "Another camera already uses this name.";
-  if (!stationIds.includes(c.stationId)) errors.stationId = "Choose a station.";
-  if (c.role !== "entry" && c.role !== "exit") errors.role = "Choose Entry or Exit.";
+  if (all.some((o) => o.id !== c.id && o.name.trim().toLowerCase() === c.name.trim().toLowerCase())) errors["name"] = "Another camera already uses this name.";
+  if (!stationIds.includes(c.stationId)) errors["stationId"] = "Choose a station.";
+  if (c.role !== "entry" && c.role !== "exit") errors["role"] = "Choose Entry or Exit.";
   const rtsp = validateRtspUrl(c.rtspUrl, c.enabled);
-  if (rtsp) errors.rtspUrl = rtsp;
-  if (c.username.length > 64) errors.username = "Username must be 64 characters or fewer.";
-  if (c.password.length > 128) errors.password = "Password must be 128 characters or fewer.";
+  if (rtsp) errors["rtspUrl"] = rtsp;
+  if (c.username.length > 64) errors["username"] = "Username must be 64 characters or fewer.";
+  if (c.password.length > 128) errors["password"] = "Password must be 128 characters or fewer.";
   range(errors, "timeoutSec", c.timeoutSec, 1, 60, "Connection timeout (s)");
   range(errors, "reconnect.intervalSec", c.reconnect.intervalSec, 1, 300, "Reconnect interval (s)");
   range(errors, "reconnect.maxAttempts", c.reconnect.maxAttempts, 0, 100, "Reconnect attempts");
@@ -419,7 +419,7 @@ export function validateRoi(cfg: RoiConfig, cameraRole?: "entry" | "exit"): Vali
   });
   if (cfg.line.enabled) {
     const len = Math.hypot(cfg.line.b.x - cfg.line.a.x, cfg.line.b.y - cfg.line.a.y);
-    if (len < MIN_LINE_LENGTH) errors.line = "Virtual line is too short. Drag its ends further apart.";
+    if (len < MIN_LINE_LENGTH) errors["line"] = "Virtual line is too short. Drag its ends further apart.";
   }
   if (cfg.zones.length === 0) warnings.push("No zones defined: the whole frame would be used.");
   if (cameraRole && cfg.zones.length > 0 && !cfg.zones.some((z) => z.kind === cameraRole))
@@ -432,8 +432,8 @@ export function validateRoi(cfg: RoiConfig, cameraRole?: "entry" | "exit"): Vali
 export function validateAudio(a: GreetingAudioSettings, clips: AudioClip[] = AUDIO_CLIPS): ValidationResult {
   const errors: FieldErrors = {};
   const warnings: string[] = [];
-  if (!clips.some((c) => c.id === a.welcomeClipId)) errors.welcomeClipId = "Choose a welcome sound.";
-  if (!clips.some((c) => c.id === a.goodbyeClipId)) errors.goodbyeClipId = "Choose a goodbye sound.";
+  if (!clips.some((c) => c.id === a.welcomeClipId)) errors["welcomeClipId"] = "Choose a welcome sound.";
+  if (!clips.some((c) => c.id === a.goodbyeClipId)) errors["goodbyeClipId"] = "Choose a goodbye sound.";
   range(errors, "volume", a.volume, 0, 100, "Volume");
   range(errors, "minGapSec", a.minGapSec, 0, 600, "Minimum gap (s)");
   if (a.volume === 0) warnings.push("Volume is 0: greetings would be silent.");
@@ -490,9 +490,9 @@ export function validateDisplay(d: VisitorDisplaySettings): ValidationResult {
   const errors: FieldErrors = {};
   const warnings: string[] = [];
   if (d.idleVideoMp4.trim() && !VIDEO_PATH("mp4").test(d.idleVideoMp4.trim()))
-    errors.idleVideoMp4 = "Use a site path like /videos/idle.mp4 or an https:// URL ending in .mp4.";
+    errors["idleVideoMp4"] = "Use a site path like /videos/idle.mp4 or an https:// URL ending in .mp4.";
   if (d.idleVideoWebm.trim() && !VIDEO_PATH("webm").test(d.idleVideoWebm.trim()))
-    errors.idleVideoWebm = "Use a site path like /videos/idle.webm or an https:// URL ending in .webm.";
+    errors["idleVideoWebm"] = "Use a site path like /videos/idle.webm or an https:// URL ending in .webm.";
   if (!d.idleVideoMp4.trim() && !d.idleVideoWebm.trim()) warnings.push("No idle video set: the fallback image will be shown.");
   range(errors, "greetingDurationMs", d.greetingDurationMs, 3000, 30000, "Greeting duration (ms)");
   text(errors, "entry.headline", d.entry.headline, 1, 40, "Entry headline");

@@ -30,7 +30,7 @@ function GeneralPage() {
     const time = sample.toLocaleTimeString("en-GB", opts);
     const parts = Object.fromEntries(new Intl.DateTimeFormat("en-GB", { timeZone: tz, year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(sample).map((p) => [p.type, p.value]));
     const mon = sample.toLocaleString("en-GB", { timeZone: tz, month: "short" });
-    const date = form.draft.dateFormat === "yyyy-MM-dd" ? `${parts.year}-${parts.month}-${parts.day}` : form.draft.dateFormat === "dd/MM/yyyy" ? `${parts.day}/${parts.month}/${parts.year}` : `${parts.day} ${mon} ${parts.year}`;
+    const date = form.draft.dateFormat === "yyyy-MM-dd" ? `${parts["year"]}-${parts["month"]}-${parts["day"]}` : form.draft.dateFormat === "dd/MM/yyyy" ? `${parts["day"]}/${parts["month"]}/${parts["year"]}` : `${parts["day"]} ${mon} ${parts["year"]}`;
     return `${date} ${time}`;
   })();
 
