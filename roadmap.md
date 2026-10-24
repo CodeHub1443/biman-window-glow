@@ -2,5 +2,10 @@
 - [x] Phase 1: design system, logo placeholder, airplane-window Visitor Display, idle video, entry/exit, queue, kiosk
 - [x] Phase 2: app shell, dashboard, events, analytics, health, settings placeholder
 - [x] Phase 3: settings workspace (9 sections, mock persistence, ROI editor, debug preview, tests, browser checks)
+- [x] Decide whether saved Visitor Display settings drive `/` and `/kiosk` (approved via Phase 4 brief)
+- [ ] Phase 4: wire saved display settings into `/` and `/kiosk` with safe defaults
+- [ ] Phase 4: tests for display wiring (defaults, missing, invalid, refresh, fallback, both routes)
+- [ ] Phase 4: responsive checks of admin pages (desktop/tablet/mobile) and fixes
+- [ ] Phase 4: backend integration readiness document
+- [ ] Phase 4: full regression (tests, typecheck, build, browser routes, debug preview start/stop)
 - [ ] Official logo + idle video (waiting on user files)
-- [ ] Decide whether saved Visitor Display settings should drive the live `/` and `/kiosk` screens (waiting on user)
