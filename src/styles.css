@@ -190,3 +190,21 @@
 @utility animate-sweep { animation: sweep 1.6s ease-out 1 both; }
 @utility animate-drift { animation: drift 30s ease-in-out infinite alternate; }
 @utility animate-blink { animation: blink 1.4s steps(2) infinite; }
+
+/* Settings → Debug Preview: simulated feed only (no real stream) */
+@keyframes roam {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(18%, 6%); }
+  50% { transform: translate(30%, 14%); }
+  75% { transform: translate(10%, 20%); }
+  100% { transform: translate(0, 0); }
+}
+@keyframes static-shift {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 6px; }
+}
+@utility animate-roam { animation: roam 9s ease-in-out infinite; }
+@utility sim-static {
+  background-image: repeating-linear-gradient(0deg, oklch(1 0 0 / 0.05) 0 1px, transparent 1px 3px);
+  animation: static-shift 0.25s steps(3) infinite;
+}

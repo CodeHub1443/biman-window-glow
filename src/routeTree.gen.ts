@@ -20,6 +20,7 @@ import { Route as OpsSettingsRouteImport } from './routes/_ops.settings'
 import { Route as OpsSettingsIndexRouteImport } from './routes/_ops.settings.index'
 import { Route as OpsSettingsCamerasRouteImport } from './routes/_ops.settings.cameras'
 import { Route as OpsSettingsGeneralRouteImport } from './routes/_ops.settings.general'
+import { Route as OpsSettingsRoiRouteImport } from './routes/_ops.settings.roi'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -75,6 +76,11 @@ const OpsSettingsGeneralRoute = OpsSettingsGeneralRouteImport.update({
   path: '/general',
   getParentRoute: () => OpsSettingsRoute,
 } as any)
+const OpsSettingsRoiRoute = OpsSettingsRoiRouteImport.update({
+  id: '/roi',
+  path: '/roi',
+  getParentRoute: () => OpsSettingsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -86,6 +92,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof OpsSettingsRouteWithChildren
   '/settings/cameras': typeof OpsSettingsCamerasRoute
   '/settings/general': typeof OpsSettingsGeneralRoute
+  '/settings/roi': typeof OpsSettingsRoiRoute
   '/settings/': typeof OpsSettingsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -97,6 +104,7 @@ export interface FileRoutesByTo {
   '/health': typeof OpsHealthRoute
   '/settings/cameras': typeof OpsSettingsCamerasRoute
   '/settings/general': typeof OpsSettingsGeneralRoute
+  '/settings/roi': typeof OpsSettingsRoiRoute
   '/settings': typeof OpsSettingsIndexRoute
 }
 export interface FileRoutesById {
@@ -111,6 +119,7 @@ export interface FileRoutesById {
   '/_ops/settings': typeof OpsSettingsRouteWithChildren
   '/_ops/settings/cameras': typeof OpsSettingsCamerasRoute
   '/_ops/settings/general': typeof OpsSettingsGeneralRoute
+  '/_ops/settings/roi': typeof OpsSettingsRoiRoute
   '/_ops/settings/': typeof OpsSettingsIndexRoute
 }
 export interface FileRouteTypes {
@@ -125,6 +134,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/settings/cameras'
     | '/settings/general'
+    | '/settings/roi'
     | '/settings/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -136,6 +146,7 @@ export interface FileRouteTypes {
     | '/health'
     | '/settings/cameras'
     | '/settings/general'
+    | '/settings/roi'
     | '/settings'
   id:
     | '__root__'
@@ -149,6 +160,7 @@ export interface FileRouteTypes {
     | '/_ops/settings'
     | '/_ops/settings/cameras'
     | '/_ops/settings/general'
+    | '/_ops/settings/roi'
     | '/_ops/settings/'
   fileRoutesById: FileRoutesById
 }
@@ -237,18 +249,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OpsSettingsGeneralRouteImport
       parentRoute: typeof OpsSettingsRoute
     }
+    '/_ops/settings/roi': {
+      id: '/_ops/settings/roi'
+      path: '/roi'
+      fullPath: '/settings/roi'
+      preLoaderRoute: typeof OpsSettingsRoiRouteImport
+      parentRoute: typeof OpsSettingsRoute
+    }
   }
 }
 
 interface OpsSettingsRouteChildren {
   OpsSettingsCamerasRoute: typeof OpsSettingsCamerasRoute
   OpsSettingsGeneralRoute: typeof OpsSettingsGeneralRoute
+  OpsSettingsRoiRoute: typeof OpsSettingsRoiRoute
   OpsSettingsIndexRoute: typeof OpsSettingsIndexRoute
 }
 
 const OpsSettingsRouteChildren: OpsSettingsRouteChildren = {
   OpsSettingsCamerasRoute: OpsSettingsCamerasRoute,
   OpsSettingsGeneralRoute: OpsSettingsGeneralRoute,
+  OpsSettingsRoiRoute: OpsSettingsRoiRoute,
   OpsSettingsIndexRoute: OpsSettingsIndexRoute,
 }
 
