@@ -178,20 +178,24 @@ export function createMockSettingsService(opts: { storage?: StorageLike; latency
   const stationIds = (d: Doc) => d.general.stations.map((s) => s.id);
   const asInput = (v: CameraSave): CameraInput => ({ ...v, password: v.password ?? "", passwordSet: v.password === null ? Boolean(passwords.get(v.id)) : Boolean(v.password) });
 
+  // Another tab saved settings: drop the cached copy so the next read sees the new values,
+  // then tell subscribers (the live display refetches).
+  const externalListeners = new Set<() => void>();
+  if (typeof window !== "undefined" && storage === window.localStorage) {
+    window.addEventListener("storage", (e) => {
+      if (e.key !== STORAGE_KEY && e.key !== null) return;
+      cache = null;
+      externalListeners.forEach((l) => l());
+    });
+  }
+
   return {
     failNextSave(message = "Simulated save failure. Nothing was changed.") {
       failNext = message;
     },
     onExternalChange(cb) {
-      // Another tab saved settings: drop the cached copy so the next read sees the new values.
-      if (typeof window === "undefined") return () => {};
-      const onStorage = (e: StorageEvent) => {
-        if (e.key !== STORAGE_KEY && e.key !== null) return;
-        cache = null;
-        cb();
-      };
-      window.addEventListener("storage", onStorage);
-      return () => window.removeEventListener("storage", onStorage);
+      externalListeners.add(cb);
+      return () => void externalListeners.delete(cb);
     },
     async getMeta() {
       return clone(load().meta);
