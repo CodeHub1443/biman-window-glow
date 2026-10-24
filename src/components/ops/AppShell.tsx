@@ -5,6 +5,7 @@ import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { useTheme } from "@/components/ThemeProvider";
 import { formatTime } from "@/lib/ops-data";
 import { cn } from "@/lib/utils";
+import { Toaster } from "@/components/ui/sonner";
 import { DemoTag } from "./ui";
 
 const NAV = [
@@ -110,6 +111,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         </header>
         <main className="mx-auto w-full max-w-[1500px] flex-1 px-4 py-6 md:px-8">{children}</main>
       </div>
+      <Toaster theme={theme} position="bottom-right" richColors closeButton />
     </div>
   );
 }

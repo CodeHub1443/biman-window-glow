@@ -5,17 +5,18 @@ export interface IdleWindowVideoProps {
   webm?: string | undefined;
   fallbackImage: string;
   fit?: "cover" | "contain";
+  motion?: "full" | "reduced";
 }
 
 /** Looping, muted, inline idle video. Falls back to a still image when the source is missing. */
-export function IdleWindowVideo({ mp4, webm, fallbackImage, fit = "cover" }: IdleWindowVideoProps) {
+export function IdleWindowVideo({ mp4, webm, fallbackImage, fit = "cover", motion = "full" }: IdleWindowVideoProps) {
   const [failed, setFailed] = useState(!mp4 && !webm);
   const fitCls = fit === "cover" ? "object-cover" : "object-contain";
 
   return (
     <div className="absolute inset-0 overflow-hidden">
       {/* Fallback always sits underneath so there is never a black frame */}
-      <img src={fallbackImage} alt="" className={`absolute inset-0 h-full w-full ${fitCls} animate-drift`} />
+      <img src={fallbackImage} alt="" className={`absolute inset-0 h-full w-full ${fitCls} ${motion === "full" ? "animate-drift" : ""}`} />
       {!failed && (
         <video
           key={`${mp4}|${webm}`}

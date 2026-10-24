@@ -17,4 +17,8 @@ export const displayConfig = {
   station: { code: "DAC", name: "Biman HQ · Main Entrance" },
   entry: { headline: "WELCOME ABOARD", sub: "Welcome to Biman Bangladesh Airlines" },
   exit: { headline: "THANK YOU FOR VISITING", sub: "Have a pleasant journey. We hope to see you again soon." },
+  /** "reduced" turns off the sky drift and greeting slide-ins. */
+  motion: "full" as "full" | "reduced",
 };
+
+export type DisplayConfig = typeof displayConfig;

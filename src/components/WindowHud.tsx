@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { displayConfig } from "@/lib/display-config";
+import { displayConfig, type DisplayConfig } from "@/lib/display-config";
 import type { VisitorEvent } from "@/services/mock-event-service";
 import { BimanBrandHeader } from "./BimanBrandHeader";
 
 /** Persistent in-window information display: logo, compass, clock, station, status. */
-export function WindowHud({ current }: { current: VisitorEvent | null }) {
+export function WindowHud({ current, config = displayConfig }: { current: VisitorEvent | null; config?: DisplayConfig }) {
   const [now, setNow] = useState<Date | null>(null);
   useEffect(() => {
     setNow(new Date());
@@ -46,8 +46,8 @@ export function WindowHud({ current }: { current: VisitorEvent | null }) {
             <span className={`inline-block h-[0.9vh] w-[0.9vh] rounded-full ${statusDot} animate-blink`} />
             {status}
           </span>
-          <span className="text-hud/75">{displayConfig.station.name}</span>
-          <span className="text-hud/75">Station {displayConfig.station.code}</span>
+          <span className="text-hud/75">{config.station.name}</span>
+          <span className="text-hud/75">Station {config.station.code}</span>
         </div>
       </div>
     </div>

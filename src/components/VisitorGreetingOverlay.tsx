@@ -1,21 +1,22 @@
 import { PlaneLanding, PlaneTakeoff } from "lucide-react";
 import type { VisitorEvent } from "@/services/mock-event-service";
-import { displayConfig } from "@/lib/display-config";
+import { displayConfig, type DisplayConfig } from "@/lib/display-config";
 import { VisitorFaceCapture } from "./VisitorFaceCapture";
 
 const fmtTime = (iso: string) => new Date(iso).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false });
 
 /** Full-canvas greeting composed over the window view. */
-export function VisitorGreetingOverlay({ event, leaving }: { event: VisitorEvent; leaving: boolean }) {
+export function VisitorGreetingOverlay({ event, leaving, config = displayConfig }: { event: VisitorEvent; leaving: boolean; config?: DisplayConfig }) {
   const isEntry = event.type === "ENTRY";
-  const copy = isEntry ? displayConfig.entry : displayConfig.exit;
+  const copy = isEntry ? config.entry : config.exit;
+  const motion = config.motion === "full";
   const Icon = isEntry ? PlaneLanding : PlaneTakeoff;
   const tag = isEntry ? "bg-entry" : "bg-exit";
 
   return (
-    <div className={`absolute inset-0 z-10 ${leaving ? "animate-greet-out" : ""}`}>
+    <div className={`absolute inset-0 z-10 ${leaving && motion ? "animate-greet-out" : ""}`}>
       <div className="absolute inset-0 greeting-scrim" />
-      <div className={`absolute inset-x-[6vw] inset-y-[15vh] flex items-center gap-[4vw] hud-text ${isEntry ? "animate-greet-in" : "animate-greet-depart"}`}>
+      <div className={`absolute inset-x-[6vw] inset-y-[15vh] flex items-center gap-[4vw] hud-text ${!motion ? "" : isEntry ? "animate-greet-in" : "animate-greet-depart"}`}>
         <div className="h-[58vh] max-h-[42vw] shrink-0 aspect-square">
           <VisitorFaceCapture src={event.faceImageUrl} isDemo={event.isDemo} accent={isEntry ? "entry" : "exit"} />
         </div>
