@@ -178,9 +178,9 @@ function SimulatedFeed({ roi, detections }: { roi: RoiConfig | undefined; detect
           <span className="absolute -top-5 left-0 whitespace-nowrap bg-primary px-1 font-mono text-[10px] text-primary-foreground">person 0.87 · sim</span>
         </div>
       )}
-      <div className="absolute inset-x-0 top-0 flex items-center justify-between bg-background/80 px-2 py-1 font-mono text-[10px] uppercase tracking-wider">
+      <div className="absolute inset-x-0 top-0 flex items-center justify-between gap-3 bg-background/80 px-2 py-1 font-mono text-[10px] uppercase tracking-wider">
         <span className="flex items-center gap-1.5"><span className="h-2 w-2 animate-blink rounded-full bg-destructive" />Simulated preview · not a live stream</span>
-        <span className="text-muted-foreground">demo still + synthetic overlay</span>
+        <span className="hidden text-right text-muted-foreground sm:inline">demo still + synthetic overlay</span>
       </div>
     </div>
   );
