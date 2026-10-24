@@ -512,9 +512,9 @@ const FALLBACK_KEYS = ["sky-wide", "sky-dusk"] as const;
 export function normalizeDisplaySettings(raw: unknown): { settings: VisitorDisplaySettings; repaired: string[] } {
   const def = defaultDisplay();
   if (!raw || typeof raw !== "object" || Array.isArray(raw)) return { settings: def, repaired: ["(all)"] };
-  const r = raw as Record<string, unknown>;
+  const r = raw as { [K in keyof VisitorDisplaySettings]?: unknown };
   const repaired: string[] = [];
-  const obj = (v: unknown) => (v && typeof v === "object" && !Array.isArray(v) ? (v as Record<string, unknown>) : {});
+  const obj = (v: unknown): { headline?: unknown; sub?: unknown } => (v && typeof v === "object" && !Array.isArray(v) ? v : {});
   const str = (v: unknown, fallback: string, path: string) => {
     if (typeof v === "string") return v;
     repaired.push(path);
