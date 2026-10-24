@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as OpsRouteImport } from './routes/_ops'
+import { Route as DisplayPreviewRouteImport } from './routes/display-preview'
 import { Route as KioskRouteImport } from './routes/kiosk'
 import { Route as OpsAnalyticsRouteImport } from './routes/_ops.analytics'
 import { Route as OpsDashboardRouteImport } from './routes/_ops.dashboard'
@@ -23,6 +24,7 @@ import { Route as OpsSettingsCamerasRouteImport } from './routes/_ops.settings.c
 import { Route as OpsSettingsDebugRouteImport } from './routes/_ops.settings.debug'
 import { Route as OpsSettingsDetectionRouteImport } from './routes/_ops.settings.detection'
 import { Route as OpsSettingsDevicesRouteImport } from './routes/_ops.settings.devices'
+import { Route as OpsSettingsDisplayRouteImport } from './routes/_ops.settings.display'
 import { Route as OpsSettingsGeneralRouteImport } from './routes/_ops.settings.general'
 import { Route as OpsSettingsRoiRouteImport } from './routes/_ops.settings.roi'
 
@@ -33,6 +35,11 @@ const IndexRoute = IndexRouteImport.update({
 } as any)
 const OpsRoute = OpsRouteImport.update({
   id: '/_ops',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DisplayPreviewRoute = DisplayPreviewRouteImport.update({
+  id: '/display-preview',
+  path: '/display-preview',
   getParentRoute: () => rootRouteImport,
 } as any)
 const KioskRoute = KioskRouteImport.update({
@@ -95,6 +102,11 @@ const OpsSettingsDevicesRoute = OpsSettingsDevicesRouteImport.update({
   path: '/devices',
   getParentRoute: () => OpsSettingsRoute,
 } as any)
+const OpsSettingsDisplayRoute = OpsSettingsDisplayRouteImport.update({
+  id: '/display',
+  path: '/display',
+  getParentRoute: () => OpsSettingsRoute,
+} as any)
 const OpsSettingsGeneralRoute = OpsSettingsGeneralRouteImport.update({
   id: '/general',
   path: '/general',
@@ -108,6 +120,7 @@ const OpsSettingsRoiRoute = OpsSettingsRoiRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/display-preview': typeof DisplayPreviewRoute
   '/kiosk': typeof KioskRoute
   '/analytics': typeof OpsAnalyticsRoute
   '/dashboard': typeof OpsDashboardRoute
@@ -119,12 +132,14 @@ export interface FileRoutesByFullPath {
   '/settings/debug': typeof OpsSettingsDebugRoute
   '/settings/detection': typeof OpsSettingsDetectionRoute
   '/settings/devices': typeof OpsSettingsDevicesRoute
+  '/settings/display': typeof OpsSettingsDisplayRoute
   '/settings/general': typeof OpsSettingsGeneralRoute
   '/settings/roi': typeof OpsSettingsRoiRoute
   '/settings/': typeof OpsSettingsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/display-preview': typeof DisplayPreviewRoute
   '/kiosk': typeof KioskRoute
   '/analytics': typeof OpsAnalyticsRoute
   '/dashboard': typeof OpsDashboardRoute
@@ -135,6 +150,7 @@ export interface FileRoutesByTo {
   '/settings/debug': typeof OpsSettingsDebugRoute
   '/settings/detection': typeof OpsSettingsDetectionRoute
   '/settings/devices': typeof OpsSettingsDevicesRoute
+  '/settings/display': typeof OpsSettingsDisplayRoute
   '/settings/general': typeof OpsSettingsGeneralRoute
   '/settings/roi': typeof OpsSettingsRoiRoute
   '/settings': typeof OpsSettingsIndexRoute
@@ -143,6 +159,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_ops': typeof OpsRouteWithChildren
+  '/display-preview': typeof DisplayPreviewRoute
   '/kiosk': typeof KioskRoute
   '/_ops/analytics': typeof OpsAnalyticsRoute
   '/_ops/dashboard': typeof OpsDashboardRoute
@@ -154,6 +171,7 @@ export interface FileRoutesById {
   '/_ops/settings/debug': typeof OpsSettingsDebugRoute
   '/_ops/settings/detection': typeof OpsSettingsDetectionRoute
   '/_ops/settings/devices': typeof OpsSettingsDevicesRoute
+  '/_ops/settings/display': typeof OpsSettingsDisplayRoute
   '/_ops/settings/general': typeof OpsSettingsGeneralRoute
   '/_ops/settings/roi': typeof OpsSettingsRoiRoute
   '/_ops/settings/': typeof OpsSettingsIndexRoute
@@ -162,6 +180,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/display-preview'
     | '/kiosk'
     | '/analytics'
     | '/dashboard'
@@ -173,12 +192,14 @@ export interface FileRouteTypes {
     | '/settings/debug'
     | '/settings/detection'
     | '/settings/devices'
+    | '/settings/display'
     | '/settings/general'
     | '/settings/roi'
     | '/settings/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/display-preview'
     | '/kiosk'
     | '/analytics'
     | '/dashboard'
@@ -189,6 +210,7 @@ export interface FileRouteTypes {
     | '/settings/debug'
     | '/settings/detection'
     | '/settings/devices'
+    | '/settings/display'
     | '/settings/general'
     | '/settings/roi'
     | '/settings'
@@ -196,6 +218,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_ops'
+    | '/display-preview'
     | '/kiosk'
     | '/_ops/analytics'
     | '/_ops/dashboard'
@@ -207,6 +230,7 @@ export interface FileRouteTypes {
     | '/_ops/settings/debug'
     | '/_ops/settings/detection'
     | '/_ops/settings/devices'
+    | '/_ops/settings/display'
     | '/_ops/settings/general'
     | '/_ops/settings/roi'
     | '/_ops/settings/'
@@ -215,6 +239,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   OpsRoute: typeof OpsRouteWithChildren
+  DisplayPreviewRoute: typeof DisplayPreviewRoute
   KioskRoute: typeof KioskRoute
 }
 
@@ -232,6 +257,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof OpsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/display-preview': {
+      id: '/display-preview'
+      path: '/display-preview'
+      fullPath: '/display-preview'
+      preLoaderRoute: typeof DisplayPreviewRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/kiosk': {
@@ -318,6 +350,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OpsSettingsDevicesRouteImport
       parentRoute: typeof OpsSettingsRoute
     }
+    '/_ops/settings/display': {
+      id: '/_ops/settings/display'
+      path: '/display'
+      fullPath: '/settings/display'
+      preLoaderRoute: typeof OpsSettingsDisplayRouteImport
+      parentRoute: typeof OpsSettingsRoute
+    }
     '/_ops/settings/general': {
       id: '/_ops/settings/general'
       path: '/general'
@@ -341,6 +380,7 @@ interface OpsSettingsRouteChildren {
   OpsSettingsDebugRoute: typeof OpsSettingsDebugRoute
   OpsSettingsDetectionRoute: typeof OpsSettingsDetectionRoute
   OpsSettingsDevicesRoute: typeof OpsSettingsDevicesRoute
+  OpsSettingsDisplayRoute: typeof OpsSettingsDisplayRoute
   OpsSettingsGeneralRoute: typeof OpsSettingsGeneralRoute
   OpsSettingsRoiRoute: typeof OpsSettingsRoiRoute
   OpsSettingsIndexRoute: typeof OpsSettingsIndexRoute
@@ -352,6 +392,7 @@ const OpsSettingsRouteChildren: OpsSettingsRouteChildren = {
   OpsSettingsDebugRoute: OpsSettingsDebugRoute,
   OpsSettingsDetectionRoute: OpsSettingsDetectionRoute,
   OpsSettingsDevicesRoute: OpsSettingsDevicesRoute,
+  OpsSettingsDisplayRoute: OpsSettingsDisplayRoute,
   OpsSettingsGeneralRoute: OpsSettingsGeneralRoute,
   OpsSettingsRoiRoute: OpsSettingsRoiRoute,
   OpsSettingsIndexRoute: OpsSettingsIndexRoute,
@@ -382,6 +423,7 @@ const OpsRouteWithChildren = OpsRoute._addFileChildren(OpsRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   OpsRoute: OpsRouteWithChildren,
+  DisplayPreviewRoute: DisplayPreviewRoute,
   KioskRoute: KioskRoute,
 }
 export const routeTree = rootRouteImport
