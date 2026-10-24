@@ -18,8 +18,11 @@ import { Route as OpsEventsRouteImport } from './routes/_ops.events'
 import { Route as OpsHealthRouteImport } from './routes/_ops.health'
 import { Route as OpsSettingsRouteImport } from './routes/_ops.settings'
 import { Route as OpsSettingsIndexRouteImport } from './routes/_ops.settings.index'
+import { Route as OpsSettingsAudioRouteImport } from './routes/_ops.settings.audio'
 import { Route as OpsSettingsCamerasRouteImport } from './routes/_ops.settings.cameras'
 import { Route as OpsSettingsDebugRouteImport } from './routes/_ops.settings.debug'
+import { Route as OpsSettingsDetectionRouteImport } from './routes/_ops.settings.detection'
+import { Route as OpsSettingsDevicesRouteImport } from './routes/_ops.settings.devices'
 import { Route as OpsSettingsGeneralRouteImport } from './routes/_ops.settings.general'
 import { Route as OpsSettingsRoiRouteImport } from './routes/_ops.settings.roi'
 
@@ -67,6 +70,11 @@ const OpsSettingsIndexRoute = OpsSettingsIndexRouteImport.update({
   path: '/',
   getParentRoute: () => OpsSettingsRoute,
 } as any)
+const OpsSettingsAudioRoute = OpsSettingsAudioRouteImport.update({
+  id: '/audio',
+  path: '/audio',
+  getParentRoute: () => OpsSettingsRoute,
+} as any)
 const OpsSettingsCamerasRoute = OpsSettingsCamerasRouteImport.update({
   id: '/cameras',
   path: '/cameras',
@@ -75,6 +83,16 @@ const OpsSettingsCamerasRoute = OpsSettingsCamerasRouteImport.update({
 const OpsSettingsDebugRoute = OpsSettingsDebugRouteImport.update({
   id: '/debug',
   path: '/debug',
+  getParentRoute: () => OpsSettingsRoute,
+} as any)
+const OpsSettingsDetectionRoute = OpsSettingsDetectionRouteImport.update({
+  id: '/detection',
+  path: '/detection',
+  getParentRoute: () => OpsSettingsRoute,
+} as any)
+const OpsSettingsDevicesRoute = OpsSettingsDevicesRouteImport.update({
+  id: '/devices',
+  path: '/devices',
   getParentRoute: () => OpsSettingsRoute,
 } as any)
 const OpsSettingsGeneralRoute = OpsSettingsGeneralRouteImport.update({
@@ -96,8 +114,11 @@ export interface FileRoutesByFullPath {
   '/events': typeof OpsEventsRoute
   '/health': typeof OpsHealthRoute
   '/settings': typeof OpsSettingsRouteWithChildren
+  '/settings/audio': typeof OpsSettingsAudioRoute
   '/settings/cameras': typeof OpsSettingsCamerasRoute
   '/settings/debug': typeof OpsSettingsDebugRoute
+  '/settings/detection': typeof OpsSettingsDetectionRoute
+  '/settings/devices': typeof OpsSettingsDevicesRoute
   '/settings/general': typeof OpsSettingsGeneralRoute
   '/settings/roi': typeof OpsSettingsRoiRoute
   '/settings/': typeof OpsSettingsIndexRoute
@@ -109,8 +130,11 @@ export interface FileRoutesByTo {
   '/dashboard': typeof OpsDashboardRoute
   '/events': typeof OpsEventsRoute
   '/health': typeof OpsHealthRoute
+  '/settings/audio': typeof OpsSettingsAudioRoute
   '/settings/cameras': typeof OpsSettingsCamerasRoute
   '/settings/debug': typeof OpsSettingsDebugRoute
+  '/settings/detection': typeof OpsSettingsDetectionRoute
+  '/settings/devices': typeof OpsSettingsDevicesRoute
   '/settings/general': typeof OpsSettingsGeneralRoute
   '/settings/roi': typeof OpsSettingsRoiRoute
   '/settings': typeof OpsSettingsIndexRoute
@@ -125,8 +149,11 @@ export interface FileRoutesById {
   '/_ops/events': typeof OpsEventsRoute
   '/_ops/health': typeof OpsHealthRoute
   '/_ops/settings': typeof OpsSettingsRouteWithChildren
+  '/_ops/settings/audio': typeof OpsSettingsAudioRoute
   '/_ops/settings/cameras': typeof OpsSettingsCamerasRoute
   '/_ops/settings/debug': typeof OpsSettingsDebugRoute
+  '/_ops/settings/detection': typeof OpsSettingsDetectionRoute
+  '/_ops/settings/devices': typeof OpsSettingsDevicesRoute
   '/_ops/settings/general': typeof OpsSettingsGeneralRoute
   '/_ops/settings/roi': typeof OpsSettingsRoiRoute
   '/_ops/settings/': typeof OpsSettingsIndexRoute
@@ -141,8 +168,11 @@ export interface FileRouteTypes {
     | '/events'
     | '/health'
     | '/settings'
+    | '/settings/audio'
     | '/settings/cameras'
     | '/settings/debug'
+    | '/settings/detection'
+    | '/settings/devices'
     | '/settings/general'
     | '/settings/roi'
     | '/settings/'
@@ -154,8 +184,11 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/events'
     | '/health'
+    | '/settings/audio'
     | '/settings/cameras'
     | '/settings/debug'
+    | '/settings/detection'
+    | '/settings/devices'
     | '/settings/general'
     | '/settings/roi'
     | '/settings'
@@ -169,8 +202,11 @@ export interface FileRouteTypes {
     | '/_ops/events'
     | '/_ops/health'
     | '/_ops/settings'
+    | '/_ops/settings/audio'
     | '/_ops/settings/cameras'
     | '/_ops/settings/debug'
+    | '/_ops/settings/detection'
+    | '/_ops/settings/devices'
     | '/_ops/settings/general'
     | '/_ops/settings/roi'
     | '/_ops/settings/'
@@ -247,6 +283,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OpsSettingsIndexRouteImport
       parentRoute: typeof OpsSettingsRoute
     }
+    '/_ops/settings/audio': {
+      id: '/_ops/settings/audio'
+      path: '/audio'
+      fullPath: '/settings/audio'
+      preLoaderRoute: typeof OpsSettingsAudioRouteImport
+      parentRoute: typeof OpsSettingsRoute
+    }
     '/_ops/settings/cameras': {
       id: '/_ops/settings/cameras'
       path: '/cameras'
@@ -259,6 +302,20 @@ declare module '@tanstack/react-router' {
       path: '/debug'
       fullPath: '/settings/debug'
       preLoaderRoute: typeof OpsSettingsDebugRouteImport
+      parentRoute: typeof OpsSettingsRoute
+    }
+    '/_ops/settings/detection': {
+      id: '/_ops/settings/detection'
+      path: '/detection'
+      fullPath: '/settings/detection'
+      preLoaderRoute: typeof OpsSettingsDetectionRouteImport
+      parentRoute: typeof OpsSettingsRoute
+    }
+    '/_ops/settings/devices': {
+      id: '/_ops/settings/devices'
+      path: '/devices'
+      fullPath: '/settings/devices'
+      preLoaderRoute: typeof OpsSettingsDevicesRouteImport
       parentRoute: typeof OpsSettingsRoute
     }
     '/_ops/settings/general': {
@@ -279,16 +336,22 @@ declare module '@tanstack/react-router' {
 }
 
 interface OpsSettingsRouteChildren {
+  OpsSettingsAudioRoute: typeof OpsSettingsAudioRoute
   OpsSettingsCamerasRoute: typeof OpsSettingsCamerasRoute
   OpsSettingsDebugRoute: typeof OpsSettingsDebugRoute
+  OpsSettingsDetectionRoute: typeof OpsSettingsDetectionRoute
+  OpsSettingsDevicesRoute: typeof OpsSettingsDevicesRoute
   OpsSettingsGeneralRoute: typeof OpsSettingsGeneralRoute
   OpsSettingsRoiRoute: typeof OpsSettingsRoiRoute
   OpsSettingsIndexRoute: typeof OpsSettingsIndexRoute
 }
 
 const OpsSettingsRouteChildren: OpsSettingsRouteChildren = {
+  OpsSettingsAudioRoute: OpsSettingsAudioRoute,
   OpsSettingsCamerasRoute: OpsSettingsCamerasRoute,
   OpsSettingsDebugRoute: OpsSettingsDebugRoute,
+  OpsSettingsDetectionRoute: OpsSettingsDetectionRoute,
+  OpsSettingsDevicesRoute: OpsSettingsDevicesRoute,
   OpsSettingsGeneralRoute: OpsSettingsGeneralRoute,
   OpsSettingsRoiRoute: OpsSettingsRoiRoute,
   OpsSettingsIndexRoute: OpsSettingsIndexRoute,
