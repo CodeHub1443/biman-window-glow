@@ -174,7 +174,7 @@ export function SaveBar<T>({ form, savedAt, saveLabel = "Save changes" }: { form
   };
   return (
     <>
-      <div className="sticky bottom-0 z-20 -mx-4 mt-6 flex flex-wrap items-center gap-3 border-t border-border bg-background/90 px-4 py-3 backdrop-blur md:-mx-8 md:px-8">
+      <div className="sticky bottom-0 z-20 mt-6 flex flex-wrap items-center gap-3 rounded-t-lg border border-b-0 border-border bg-card/95 px-4 py-3 shadow-lg backdrop-blur">
         <SaveStatusChip status={form.status} savedAt={savedAt} />
         {form.dirty && errorCount > 0 && <span className="text-xs text-destructive">{errorCount} field{errorCount > 1 ? "s" : ""} need attention</span>}
         <div className="ml-auto flex gap-2">

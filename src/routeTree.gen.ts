@@ -17,6 +17,8 @@ import { Route as OpsDashboardRouteImport } from './routes/_ops.dashboard'
 import { Route as OpsEventsRouteImport } from './routes/_ops.events'
 import { Route as OpsHealthRouteImport } from './routes/_ops.health'
 import { Route as OpsSettingsRouteImport } from './routes/_ops.settings'
+import { Route as OpsSettingsIndexRouteImport } from './routes/_ops.settings.index'
+import { Route as OpsSettingsGeneralRouteImport } from './routes/_ops.settings.general'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -57,6 +59,16 @@ const OpsSettingsRoute = OpsSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => OpsRoute,
 } as any)
+const OpsSettingsIndexRoute = OpsSettingsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => OpsSettingsRoute,
+} as any)
+const OpsSettingsGeneralRoute = OpsSettingsGeneralRouteImport.update({
+  id: '/general',
+  path: '/general',
+  getParentRoute: () => OpsSettingsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -65,7 +77,9 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof OpsDashboardRoute
   '/events': typeof OpsEventsRoute
   '/health': typeof OpsHealthRoute
-  '/settings': typeof OpsSettingsRoute
+  '/settings': typeof OpsSettingsRouteWithChildren
+  '/settings/general': typeof OpsSettingsGeneralRoute
+  '/settings/': typeof OpsSettingsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -74,7 +88,8 @@ export interface FileRoutesByTo {
   '/dashboard': typeof OpsDashboardRoute
   '/events': typeof OpsEventsRoute
   '/health': typeof OpsHealthRoute
-  '/settings': typeof OpsSettingsRoute
+  '/settings/general': typeof OpsSettingsGeneralRoute
+  '/settings': typeof OpsSettingsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -85,7 +100,9 @@ export interface FileRoutesById {
   '/_ops/dashboard': typeof OpsDashboardRoute
   '/_ops/events': typeof OpsEventsRoute
   '/_ops/health': typeof OpsHealthRoute
-  '/_ops/settings': typeof OpsSettingsRoute
+  '/_ops/settings': typeof OpsSettingsRouteWithChildren
+  '/_ops/settings/general': typeof OpsSettingsGeneralRoute
+  '/_ops/settings/': typeof OpsSettingsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -97,6 +114,8 @@ export interface FileRouteTypes {
     | '/events'
     | '/health'
     | '/settings'
+    | '/settings/general'
+    | '/settings/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -105,6 +124,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/events'
     | '/health'
+    | '/settings/general'
     | '/settings'
   id:
     | '__root__'
@@ -116,6 +136,8 @@ export interface FileRouteTypes {
     | '/_ops/events'
     | '/_ops/health'
     | '/_ops/settings'
+    | '/_ops/settings/general'
+    | '/_ops/settings/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -182,15 +204,43 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OpsSettingsRouteImport
       parentRoute: typeof OpsRoute
     }
+    '/_ops/settings/': {
+      id: '/_ops/settings/'
+      path: '/'
+      fullPath: '/settings/'
+      preLoaderRoute: typeof OpsSettingsIndexRouteImport
+      parentRoute: typeof OpsSettingsRoute
+    }
+    '/_ops/settings/general': {
+      id: '/_ops/settings/general'
+      path: '/general'
+      fullPath: '/settings/general'
+      preLoaderRoute: typeof OpsSettingsGeneralRouteImport
+      parentRoute: typeof OpsSettingsRoute
+    }
   }
 }
+
+interface OpsSettingsRouteChildren {
+  OpsSettingsGeneralRoute: typeof OpsSettingsGeneralRoute
+  OpsSettingsIndexRoute: typeof OpsSettingsIndexRoute
+}
+
+const OpsSettingsRouteChildren: OpsSettingsRouteChildren = {
+  OpsSettingsGeneralRoute: OpsSettingsGeneralRoute,
+  OpsSettingsIndexRoute: OpsSettingsIndexRoute,
+}
+
+const OpsSettingsRouteWithChildren = OpsSettingsRoute._addFileChildren(
+  OpsSettingsRouteChildren,
+)
 
 interface OpsRouteChildren {
   OpsAnalyticsRoute: typeof OpsAnalyticsRoute
   OpsDashboardRoute: typeof OpsDashboardRoute
   OpsEventsRoute: typeof OpsEventsRoute
   OpsHealthRoute: typeof OpsHealthRoute
-  OpsSettingsRoute: typeof OpsSettingsRoute
+  OpsSettingsRoute: typeof OpsSettingsRouteWithChildren
 }
 
 const OpsRouteChildren: OpsRouteChildren = {
@@ -198,7 +248,7 @@ const OpsRouteChildren: OpsRouteChildren = {
   OpsDashboardRoute: OpsDashboardRoute,
   OpsEventsRoute: OpsEventsRoute,
   OpsHealthRoute: OpsHealthRoute,
-  OpsSettingsRoute: OpsSettingsRoute,
+  OpsSettingsRoute: OpsSettingsRouteWithChildren,
 }
 
 const OpsRouteWithChildren = OpsRoute._addFileChildren(OpsRouteChildren)
