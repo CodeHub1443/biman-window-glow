@@ -65,7 +65,7 @@ function Index() {
             </div>
             <label className="mt-4 block text-sm text-muted-foreground">
               Greeting duration <span className="font-mono text-foreground">{duration / 1000}s</span>
-              <input type="range" min={3000} max={15000} step={1000} value={duration} onChange={(e) => setDuration(+e.target.value)} className="mt-1 w-full accent-primary" />
+              <input type="range" min={3000} max={30000} step={500} value={duration} onChange={(e) => setDurationOverride(+e.target.value)} className="mt-1 w-full accent-primary" />
             </label>
             <div className="mt-2 font-mono text-xs text-muted-foreground">queue {state.queueLength} · duplicates blocked {state.suppressed}</div>
             <div className="mt-3 grid grid-cols-2 gap-2">
