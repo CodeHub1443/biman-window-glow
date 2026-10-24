@@ -502,6 +502,51 @@ export function validateDisplay(d: VisitorDisplaySettings): ValidationResult {
   return { errors, warnings };
 }
 
+const FALLBACK_KEYS = ["sky-wide", "sky-dusk"] as const;
+
+/**
+ * Repairs stored display settings field by field: anything missing, of the wrong type, unknown or
+ * invalid falls back to the built-in default, so a corrupted save can never break the live screen.
+ * `repaired` lists the paths that were replaced (empty when the input was fully valid).
+ */
+export function normalizeDisplaySettings(raw: unknown): { settings: VisitorDisplaySettings; repaired: string[] } {
+  const def = defaultDisplay();
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return { settings: def, repaired: ["(all)"] };
+  const r = raw as { [K in keyof VisitorDisplaySettings]?: unknown };
+  const repaired: string[] = [];
+  const obj = (v: unknown): { headline?: unknown; sub?: unknown } => (v && typeof v === "object" && !Array.isArray(v) ? v : {});
+  const str = (v: unknown, fallback: string, path: string) => {
+    if (typeof v === "string") return v;
+    repaired.push(path);
+    return fallback;
+  };
+  const oneOf = <T extends string>(v: unknown, allowed: readonly T[], fallback: T, path: string): T => {
+    if (typeof v === "string" && (allowed as readonly string[]).includes(v)) return v as T;
+    repaired.push(path);
+    return fallback;
+  };
+  const entry = obj(r.entry);
+  const exit = obj(r.exit);
+  let settings: VisitorDisplaySettings = {
+    idleVideoMp4: str(r.idleVideoMp4, def.idleVideoMp4, "idleVideoMp4"),
+    idleVideoWebm: str(r.idleVideoWebm, def.idleVideoWebm, "idleVideoWebm"),
+    fallbackImage: oneOf(r.fallbackImage, FALLBACK_KEYS, def.fallbackImage, "fallbackImage"),
+    fit: oneOf(r.fit, ["cover", "contain"] as const, def.fit, "fit"),
+    greetingDurationMs:
+      typeof r.greetingDurationMs === "number" && Number.isFinite(r.greetingDurationMs)
+        ? r.greetingDurationMs
+        : (repaired.push("greetingDurationMs"), def.greetingDurationMs),
+    entry: { headline: str(entry.headline, def.entry.headline, "entry.headline"), sub: str(entry.sub, def.entry.sub, "entry.sub") },
+    exit: { headline: str(exit.headline, def.exit.headline, "exit.headline"), sub: str(exit.sub, def.exit.sub, "exit.sub") },
+    motion: oneOf(r.motion, ["full", "reduced"] as const, def.motion, "motion"),
+  };
+  for (const path of Object.keys(validateDisplay(settings).errors)) {
+    settings = setAt(settings, path, getAt(def, path));
+    repaired.push(path);
+  }
+  return { settings, repaired: [...new Set(repaired)] };
+}
+
 /** Maps saved display settings onto the existing Visitor Display configuration shape. */
 export function toDisplayConfig<T extends { idleVideo: { fallbackImage: string } }>(
   base: T,

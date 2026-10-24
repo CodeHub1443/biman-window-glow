@@ -2,9 +2,9 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Maximize, Moon, PlaneLanding, PlaneTakeoff, RotateCcw, Sun, Copy, Layers, ImageOff, SlidersHorizontal, X } from "lucide-react";
 import { useState } from "react";
 import { VisitorDisplay } from "@/components/VisitorDisplay";
+import { useDisplayConfig } from "@/hooks/use-display-config";
 import { useVisitorDisplay } from "@/hooks/use-visitor-display";
 import { mockEventService, type VisitorEvent } from "@/services/mock-event-service";
-import { displayConfig } from "@/lib/display-config";
 import { useTheme } from "@/components/ThemeProvider";
 
 export const Route = createFileRoute("/")({
@@ -25,7 +25,10 @@ const btn =
   "inline-flex w-full items-center gap-2 rounded-md border border-border bg-card px-3 py-2 text-sm font-medium text-card-foreground transition hover:bg-accent disabled:opacity-40";
 
 function Index() {
-  const [duration, setDuration] = useState(displayConfig.greetingDurationMs);
+  const { config } = useDisplayConfig();
+  // The demo slider overrides the saved duration for this session only; it is never saved.
+  const [durationOverride, setDurationOverride] = useState<number | null>(null);
+  const duration = durationOverride ?? config.greetingDurationMs;
   const { state, resetToIdle } = useVisitorDisplay(mockEventService, duration);
   const { theme, toggle } = useTheme();
   const [last, setLast] = useState<VisitorEvent | null>(null);
@@ -40,7 +43,7 @@ function Index() {
 
   return (
     <div className="relative h-screen w-screen overflow-hidden">
-      <VisitorDisplay state={state} />
+      <VisitorDisplay state={state} config={config} />
 
       {/* Developer panel — floats over the bezel, never shrinks the display. Not rendered in /kiosk. */}
       <div className="fixed bottom-6 right-6 z-50">
@@ -62,7 +65,7 @@ function Index() {
             </div>
             <label className="mt-4 block text-sm text-muted-foreground">
               Greeting duration <span className="font-mono text-foreground">{duration / 1000}s</span>
-              <input type="range" min={3000} max={15000} step={1000} value={duration} onChange={(e) => setDuration(+e.target.value)} className="mt-1 w-full accent-primary" />
+              <input type="range" min={3000} max={30000} step={500} value={duration} onChange={(e) => setDurationOverride(+e.target.value)} className="mt-1 w-full accent-primary" />
             </label>
             <div className="mt-2 font-mono text-xs text-muted-foreground">queue {state.queueLength} · duplicates blocked {state.suppressed}</div>
             <div className="mt-3 grid grid-cols-2 gap-2">

@@ -29,8 +29,8 @@ function DisplayPage() {
 
   return (
     <div className="space-y-5">
-      <Notice tone="warning" title="Preview only for now">
-        These settings drive the preview below. The live Visitor Display and kiosk screens still use their built-in configuration and are unchanged until you approve linking them.
+      <Notice tone="info" title="Saved settings apply to the live screens">
+        After you save, the Visitor Display and kiosk use these settings (open screens update automatically). Unsaved edits appear only in the preview below. If saved settings are missing or damaged, the screens fall back to the built-in defaults.
       </Notice>
 
       <PreviewFrame settings={valid ? d : form.saved} stale={!valid} />

@@ -181,7 +181,7 @@ export function SaveBar<T>({ form, savedAt, saveLabel = "Save changes" }: { form
           <button type="button" onClick={form.cancel} disabled={!form.dirty || form.status === "saving"} className="inline-flex h-9 items-center gap-2 rounded-md border border-border bg-card px-3 text-sm font-medium transition hover:bg-accent disabled:opacity-40">
             <RotateCcw className="h-4 w-4" /> Cancel
           </button>
-          <button type="button" onClick={onSave} disabled={!form.dirty || form.status === "saving"} className="inline-flex h-9 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90 disabled:opacity-40">
+          <button type="button" onClick={onSave} disabled={!form.dirty || form.status === "saving"} className="inline-flex h-9 items-center gap-2 whitespace-nowrap rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90 disabled:opacity-40">
             {form.status === "saving" && <Loader2 className="h-4 w-4 animate-spin" />}{saveLabel}
           </button>
         </div>

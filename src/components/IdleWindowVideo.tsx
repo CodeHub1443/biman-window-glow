@@ -10,7 +10,11 @@ export interface IdleWindowVideoProps {
 
 /** Looping, muted, inline idle video. Falls back to a still image when the source is missing. */
 export function IdleWindowVideo({ mp4, webm, fallbackImage, fit = "cover", motion = "full" }: IdleWindowVideoProps) {
-  const [failed, setFailed] = useState(!mp4 && !webm);
+  // Failure is remembered per source pair, so a newly configured video gets a fresh attempt.
+  const srcKey = `${mp4 ?? ""}|${webm ?? ""}`;
+  const [failedKey, setFailedKey] = useState<string | null>(null);
+  const failed = (!mp4 && !webm) || failedKey === srcKey;
+  const fail = () => setFailedKey(srcKey);
   const fitCls = fit === "cover" ? "object-cover" : "object-contain";
 
   return (
@@ -19,7 +23,7 @@ export function IdleWindowVideo({ mp4, webm, fallbackImage, fit = "cover", motio
       <img src={fallbackImage} alt="" className={`absolute inset-0 h-full w-full ${fitCls} ${motion === "full" ? "animate-drift" : ""}`} />
       {!failed && (
         <video
-          key={`${mp4}|${webm}`}
+          key={srcKey}
           className={`absolute inset-0 h-full w-full ${fitCls}`}
           autoPlay
           muted
@@ -27,10 +31,10 @@ export function IdleWindowVideo({ mp4, webm, fallbackImage, fit = "cover", motio
           playsInline
           disablePictureInPicture
           controls={false}
-          onError={() => setFailed(true)}
+          onError={fail}
         >
-          {webm && <source src={webm} type="video/webm" onError={() => !mp4 && setFailed(true)} />}
-          {mp4 && <source src={mp4} type="video/mp4" onError={() => setFailed(true)} />}
+          {webm && <source src={webm} type="video/webm" onError={() => !mp4 && fail()} />}
+          {mp4 && <source src={mp4} type="video/mp4" onError={fail} />}
         </video>
       )}
       {failed && (

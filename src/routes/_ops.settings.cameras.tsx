@@ -89,7 +89,7 @@ function CamerasPage() {
 
       <Panel
         title={`Cameras · ${cameras.length} of ${PLANNED_CAMERA_COUNT} planned`}
-        meta={<button onClick={onAdd} className="inline-flex h-9 items-center gap-2 rounded-md bg-primary px-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90"><Plus className="h-4 w-4" />Add camera</button>}
+        meta={<button onClick={onAdd} className="inline-flex h-9 shrink-0 items-center gap-2 whitespace-nowrap rounded-md bg-primary px-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90"><Plus className="h-4 w-4" />Add camera</button>}
       >
         {cameras.length === 0 ? (
           <EmptyState title="No cameras configured" hint="Add the entry and exit cameras for each station." />
@@ -299,12 +299,12 @@ function CameraEditor({ mode, camera, all, stations, onDone, onTested }: {
         <WarningList warnings={form.warnings} />
       </div>
 
-      <div className="sticky bottom-0 -mx-6 mt-6 flex items-center gap-2 border-t border-border bg-background px-6 py-3">
+      <div className="sticky -bottom-6 -mx-6 -mb-6 mt-6 flex items-center gap-2 border-t border-border bg-background px-6 py-3">
         <SaveStatusChip status={form.status} />
         <div className="ml-auto flex gap-2">
           <button type="button" className={ghostBtn} onClick={() => (form.dirty ? setConfirm("discard") : onDone())}>Cancel</button>
           <button type="button" onClick={() => void save()} disabled={form.status === "saving" || (mode === "update" && !form.dirty)}
-            className="inline-flex h-9 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-40">
+            className="inline-flex h-9 items-center gap-2 whitespace-nowrap rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-40">
             {form.status === "saving" && <Loader2 className="h-4 w-4 animate-spin" />}{mode === "create" ? "Add camera" : "Save camera"}
           </button>
         </div>

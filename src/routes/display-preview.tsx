@@ -2,10 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { VisitorDisplay } from "@/components/VisitorDisplay";
 import { useVisitorDisplay } from "@/hooks/use-visitor-display";
-import { displayConfig } from "@/lib/display-config";
-import { FALLBACK_IMAGES, type PreviewMessage } from "@/lib/display-images";
+import type { PreviewMessage } from "@/lib/display-images";
+import { resolveDisplayConfig } from "@/lib/live-display-config";
 import { settingsService } from "@/lib/ops-queries";
-import { toDisplayConfig } from "@/lib/settings-logic";
 import { mockEventService, type VisitorEvent, type VisitorEventSource } from "@/services/mock-event-service";
 import type { VisitorDisplaySettings } from "@/types/settings";
 
@@ -36,7 +35,7 @@ function createLocalSource() {
 function DisplayPreview() {
   const [settings, setSettings] = useState<VisitorDisplaySettings | null>(null);
   const local = useMemo(createLocalSource, []);
-  const config = useMemo(() => (settings ? toDisplayConfig(displayConfig, settings, FALLBACK_IMAGES) : displayConfig), [settings]);
+  const config = useMemo(() => resolveDisplayConfig(settings), [settings]);
   const { state, resetToIdle } = useVisitorDisplay(local.source, config.greetingDurationMs);
   const embedded = typeof window !== "undefined" && window.parent !== window;
 
