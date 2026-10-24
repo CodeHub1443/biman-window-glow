@@ -6,8 +6,8 @@
  */
 import {
   AUDIO_CLIPS, auditEntry, clone, defaultAudio, defaultCameras, defaultDetection, defaultDevices, defaultDisplay,
-  defaultGeneral, defaultOperators, defaultRoi, simulateConnectionTest, summarizeChanges, validateAudio, validateCamera,
-  validateDetection, validateDevices, validateDisplay, validateGeneral, validateOperators, validateRoi, type CameraInput,
+  defaultGeneral, defaultOperators, defaultRoi, normalizeDisplaySettings, simulateConnectionTest, summarizeChanges, validateAudio,
+  validateCamera, validateDetection, validateDevices, validateDisplay, validateGeneral, validateOperators, validateRoi, type CameraInput,
 } from "@/lib/settings-logic";
 import type {
   AudioClip, AuditEntry, CameraConfig, ConnectionTestResult, DetectionSettings, DeviceNetworkSettings, FieldErrors,
@@ -46,12 +46,15 @@ export interface SettingsService {
   getDevices(): Promise<DeviceNetworkSettings>;
   saveDevices(v: DeviceNetworkSettings): Promise<DeviceNetworkSettings>;
   runDiagnostics(v: DeviceNetworkSettings): Promise<DiagnosticCheck[]>;
+  /** Always resolves to a complete, valid configuration (repaired with defaults where needed). */
   getDisplay(): Promise<VisitorDisplaySettings>;
   saveDisplay(v: VisitorDisplaySettings): Promise<VisitorDisplaySettings>;
   listOperators(): Promise<OperatorAccount[]>;
   saveOperators(v: OperatorAccount[], action: string): Promise<OperatorAccount[]>;
   listAudit(): Promise<AuditEntry[]>;
   resetAll(): Promise<void>;
+  /** Notifies when settings were changed elsewhere (another tab now; a server push later). */
+  onExternalChange(cb: () => void): () => void;
 }
 
 export class SettingsValidationError extends Error {
@@ -126,12 +129,24 @@ export function createMockSettingsService(opts: { storage?: StorageLike; latency
 
   const load = (): Doc => {
     if (cache) return cache;
+    const fresh = freshDoc(now());
     try {
       const raw = storage.getItem(STORAGE_KEY);
-      const parsed = raw ? (JSON.parse(raw) as Doc) : null;
-      cache = parsed?.version === 1 ? { ...freshDoc(now()), ...parsed } : freshDoc(now());
+      const parsed = raw ? (JSON.parse(raw) as Partial<Doc> | null) : null;
+      if (parsed && typeof parsed === "object" && parsed.version === 1) {
+        // Keep each stored section only if it has the expected shape; otherwise use the demo default.
+        const merged = { ...fresh } as Record<keyof Doc, unknown>;
+        (Object.keys(fresh) as (keyof Doc)[]).forEach((k) => {
+          const v = (parsed as Record<string, unknown>)[k];
+          const ok = v !== null && typeof v === typeof fresh[k] && Array.isArray(v) === Array.isArray(fresh[k]);
+          if (ok) merged[k] = v;
+        });
+        const doc = merged as unknown as Doc;
+        doc.display = normalizeDisplaySettings(doc.display).settings;
+        cache = doc;
+      } else cache = fresh;
     } catch {
-      cache = freshDoc(now());
+      cache = fresh;
     }
     return cache;
   };
@@ -166,6 +181,17 @@ export function createMockSettingsService(opts: { storage?: StorageLike; latency
   return {
     failNextSave(message = "Simulated save failure. Nothing was changed.") {
       failNext = message;
+    },
+    onExternalChange(cb) {
+      // Another tab saved settings: drop the cached copy so the next read sees the new values.
+      if (typeof window === "undefined") return () => {};
+      const onStorage = (e: StorageEvent) => {
+        if (e.key !== STORAGE_KEY && e.key !== null) return;
+        cache = null;
+        cb();
+      };
+      window.addEventListener("storage", onStorage);
+      return () => window.removeEventListener("storage", onStorage);
     },
     async getMeta() {
       return clone(load().meta);
