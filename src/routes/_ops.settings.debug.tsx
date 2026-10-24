@@ -21,7 +21,7 @@ export const Route = createFileRoute("/_ops/settings/debug")({
 });
 
 /** Session policy: preview stops on leave, camera change, hidden tab, or after this long. */
-export const PREVIEW_SESSION_LIMIT_MS = 5 * 60_000;
+const PREVIEW_SESSION_LIMIT_MS = 5 * 60_000;
 const CONNECT_DELAY_MS = 1200;
 
 const STATUS_LABEL: Record<PreviewStatus, { label: string; cls: string }> = {

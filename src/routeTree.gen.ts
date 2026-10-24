@@ -19,6 +19,7 @@ import { Route as OpsHealthRouteImport } from './routes/_ops.health'
 import { Route as OpsSettingsRouteImport } from './routes/_ops.settings'
 import { Route as OpsSettingsIndexRouteImport } from './routes/_ops.settings.index'
 import { Route as OpsSettingsCamerasRouteImport } from './routes/_ops.settings.cameras'
+import { Route as OpsSettingsDebugRouteImport } from './routes/_ops.settings.debug'
 import { Route as OpsSettingsGeneralRouteImport } from './routes/_ops.settings.general'
 import { Route as OpsSettingsRoiRouteImport } from './routes/_ops.settings.roi'
 
@@ -71,6 +72,11 @@ const OpsSettingsCamerasRoute = OpsSettingsCamerasRouteImport.update({
   path: '/cameras',
   getParentRoute: () => OpsSettingsRoute,
 } as any)
+const OpsSettingsDebugRoute = OpsSettingsDebugRouteImport.update({
+  id: '/debug',
+  path: '/debug',
+  getParentRoute: () => OpsSettingsRoute,
+} as any)
 const OpsSettingsGeneralRoute = OpsSettingsGeneralRouteImport.update({
   id: '/general',
   path: '/general',
@@ -91,6 +97,7 @@ export interface FileRoutesByFullPath {
   '/health': typeof OpsHealthRoute
   '/settings': typeof OpsSettingsRouteWithChildren
   '/settings/cameras': typeof OpsSettingsCamerasRoute
+  '/settings/debug': typeof OpsSettingsDebugRoute
   '/settings/general': typeof OpsSettingsGeneralRoute
   '/settings/roi': typeof OpsSettingsRoiRoute
   '/settings/': typeof OpsSettingsIndexRoute
@@ -103,6 +110,7 @@ export interface FileRoutesByTo {
   '/events': typeof OpsEventsRoute
   '/health': typeof OpsHealthRoute
   '/settings/cameras': typeof OpsSettingsCamerasRoute
+  '/settings/debug': typeof OpsSettingsDebugRoute
   '/settings/general': typeof OpsSettingsGeneralRoute
   '/settings/roi': typeof OpsSettingsRoiRoute
   '/settings': typeof OpsSettingsIndexRoute
@@ -118,6 +126,7 @@ export interface FileRoutesById {
   '/_ops/health': typeof OpsHealthRoute
   '/_ops/settings': typeof OpsSettingsRouteWithChildren
   '/_ops/settings/cameras': typeof OpsSettingsCamerasRoute
+  '/_ops/settings/debug': typeof OpsSettingsDebugRoute
   '/_ops/settings/general': typeof OpsSettingsGeneralRoute
   '/_ops/settings/roi': typeof OpsSettingsRoiRoute
   '/_ops/settings/': typeof OpsSettingsIndexRoute
@@ -133,6 +142,7 @@ export interface FileRouteTypes {
     | '/health'
     | '/settings'
     | '/settings/cameras'
+    | '/settings/debug'
     | '/settings/general'
     | '/settings/roi'
     | '/settings/'
@@ -145,6 +155,7 @@ export interface FileRouteTypes {
     | '/events'
     | '/health'
     | '/settings/cameras'
+    | '/settings/debug'
     | '/settings/general'
     | '/settings/roi'
     | '/settings'
@@ -159,6 +170,7 @@ export interface FileRouteTypes {
     | '/_ops/health'
     | '/_ops/settings'
     | '/_ops/settings/cameras'
+    | '/_ops/settings/debug'
     | '/_ops/settings/general'
     | '/_ops/settings/roi'
     | '/_ops/settings/'
@@ -242,6 +254,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OpsSettingsCamerasRouteImport
       parentRoute: typeof OpsSettingsRoute
     }
+    '/_ops/settings/debug': {
+      id: '/_ops/settings/debug'
+      path: '/debug'
+      fullPath: '/settings/debug'
+      preLoaderRoute: typeof OpsSettingsDebugRouteImport
+      parentRoute: typeof OpsSettingsRoute
+    }
     '/_ops/settings/general': {
       id: '/_ops/settings/general'
       path: '/general'
@@ -261,6 +280,7 @@ declare module '@tanstack/react-router' {
 
 interface OpsSettingsRouteChildren {
   OpsSettingsCamerasRoute: typeof OpsSettingsCamerasRoute
+  OpsSettingsDebugRoute: typeof OpsSettingsDebugRoute
   OpsSettingsGeneralRoute: typeof OpsSettingsGeneralRoute
   OpsSettingsRoiRoute: typeof OpsSettingsRoiRoute
   OpsSettingsIndexRoute: typeof OpsSettingsIndexRoute
@@ -268,6 +288,7 @@ interface OpsSettingsRouteChildren {
 
 const OpsSettingsRouteChildren: OpsSettingsRouteChildren = {
   OpsSettingsCamerasRoute: OpsSettingsCamerasRoute,
+  OpsSettingsDebugRoute: OpsSettingsDebugRoute,
   OpsSettingsGeneralRoute: OpsSettingsGeneralRoute,
   OpsSettingsRoiRoute: OpsSettingsRoiRoute,
   OpsSettingsIndexRoute: OpsSettingsIndexRoute,
