@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as OpsRouteImport } from './routes/_ops'
+import { Route as DisplayPreviewRouteImport } from './routes/display-preview'
 import { Route as KioskRouteImport } from './routes/kiosk'
 import { Route as OpsAnalyticsRouteImport } from './routes/_ops.analytics'
 import { Route as OpsDashboardRouteImport } from './routes/_ops.dashboard'
@@ -18,8 +19,15 @@ import { Route as OpsEventsRouteImport } from './routes/_ops.events'
 import { Route as OpsHealthRouteImport } from './routes/_ops.health'
 import { Route as OpsSettingsRouteImport } from './routes/_ops.settings'
 import { Route as OpsSettingsIndexRouteImport } from './routes/_ops.settings.index'
+import { Route as OpsSettingsAccessRouteImport } from './routes/_ops.settings.access'
+import { Route as OpsSettingsAudioRouteImport } from './routes/_ops.settings.audio'
 import { Route as OpsSettingsCamerasRouteImport } from './routes/_ops.settings.cameras'
+import { Route as OpsSettingsDebugRouteImport } from './routes/_ops.settings.debug'
+import { Route as OpsSettingsDetectionRouteImport } from './routes/_ops.settings.detection'
+import { Route as OpsSettingsDevicesRouteImport } from './routes/_ops.settings.devices'
+import { Route as OpsSettingsDisplayRouteImport } from './routes/_ops.settings.display'
 import { Route as OpsSettingsGeneralRouteImport } from './routes/_ops.settings.general'
+import { Route as OpsSettingsRoiRouteImport } from './routes/_ops.settings.roi'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -28,6 +36,11 @@ const IndexRoute = IndexRouteImport.update({
 } as any)
 const OpsRoute = OpsRouteImport.update({
   id: '/_ops',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DisplayPreviewRoute = DisplayPreviewRouteImport.update({
+  id: '/display-preview',
+  path: '/display-preview',
   getParentRoute: () => rootRouteImport,
 } as any)
 const KioskRoute = KioskRouteImport.update({
@@ -65,9 +78,39 @@ const OpsSettingsIndexRoute = OpsSettingsIndexRouteImport.update({
   path: '/',
   getParentRoute: () => OpsSettingsRoute,
 } as any)
+const OpsSettingsAccessRoute = OpsSettingsAccessRouteImport.update({
+  id: '/access',
+  path: '/access',
+  getParentRoute: () => OpsSettingsRoute,
+} as any)
+const OpsSettingsAudioRoute = OpsSettingsAudioRouteImport.update({
+  id: '/audio',
+  path: '/audio',
+  getParentRoute: () => OpsSettingsRoute,
+} as any)
 const OpsSettingsCamerasRoute = OpsSettingsCamerasRouteImport.update({
   id: '/cameras',
   path: '/cameras',
+  getParentRoute: () => OpsSettingsRoute,
+} as any)
+const OpsSettingsDebugRoute = OpsSettingsDebugRouteImport.update({
+  id: '/debug',
+  path: '/debug',
+  getParentRoute: () => OpsSettingsRoute,
+} as any)
+const OpsSettingsDetectionRoute = OpsSettingsDetectionRouteImport.update({
+  id: '/detection',
+  path: '/detection',
+  getParentRoute: () => OpsSettingsRoute,
+} as any)
+const OpsSettingsDevicesRoute = OpsSettingsDevicesRouteImport.update({
+  id: '/devices',
+  path: '/devices',
+  getParentRoute: () => OpsSettingsRoute,
+} as any)
+const OpsSettingsDisplayRoute = OpsSettingsDisplayRouteImport.update({
+  id: '/display',
+  path: '/display',
   getParentRoute: () => OpsSettingsRoute,
 } as any)
 const OpsSettingsGeneralRoute = OpsSettingsGeneralRouteImport.update({
@@ -75,86 +118,140 @@ const OpsSettingsGeneralRoute = OpsSettingsGeneralRouteImport.update({
   path: '/general',
   getParentRoute: () => OpsSettingsRoute,
 } as any)
+const OpsSettingsRoiRoute = OpsSettingsRoiRouteImport.update({
+  id: '/roi',
+  path: '/roi',
+  getParentRoute: () => OpsSettingsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/display-preview': typeof DisplayPreviewRoute
   '/kiosk': typeof KioskRoute
   '/analytics': typeof OpsAnalyticsRoute
   '/dashboard': typeof OpsDashboardRoute
   '/events': typeof OpsEventsRoute
   '/health': typeof OpsHealthRoute
   '/settings': typeof OpsSettingsRouteWithChildren
+  '/settings/access': typeof OpsSettingsAccessRoute
+  '/settings/audio': typeof OpsSettingsAudioRoute
   '/settings/cameras': typeof OpsSettingsCamerasRoute
+  '/settings/debug': typeof OpsSettingsDebugRoute
+  '/settings/detection': typeof OpsSettingsDetectionRoute
+  '/settings/devices': typeof OpsSettingsDevicesRoute
+  '/settings/display': typeof OpsSettingsDisplayRoute
   '/settings/general': typeof OpsSettingsGeneralRoute
+  '/settings/roi': typeof OpsSettingsRoiRoute
   '/settings/': typeof OpsSettingsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/display-preview': typeof DisplayPreviewRoute
   '/kiosk': typeof KioskRoute
   '/analytics': typeof OpsAnalyticsRoute
   '/dashboard': typeof OpsDashboardRoute
   '/events': typeof OpsEventsRoute
   '/health': typeof OpsHealthRoute
+  '/settings/access': typeof OpsSettingsAccessRoute
+  '/settings/audio': typeof OpsSettingsAudioRoute
   '/settings/cameras': typeof OpsSettingsCamerasRoute
+  '/settings/debug': typeof OpsSettingsDebugRoute
+  '/settings/detection': typeof OpsSettingsDetectionRoute
+  '/settings/devices': typeof OpsSettingsDevicesRoute
+  '/settings/display': typeof OpsSettingsDisplayRoute
   '/settings/general': typeof OpsSettingsGeneralRoute
+  '/settings/roi': typeof OpsSettingsRoiRoute
   '/settings': typeof OpsSettingsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_ops': typeof OpsRouteWithChildren
+  '/display-preview': typeof DisplayPreviewRoute
   '/kiosk': typeof KioskRoute
   '/_ops/analytics': typeof OpsAnalyticsRoute
   '/_ops/dashboard': typeof OpsDashboardRoute
   '/_ops/events': typeof OpsEventsRoute
   '/_ops/health': typeof OpsHealthRoute
   '/_ops/settings': typeof OpsSettingsRouteWithChildren
+  '/_ops/settings/access': typeof OpsSettingsAccessRoute
+  '/_ops/settings/audio': typeof OpsSettingsAudioRoute
   '/_ops/settings/cameras': typeof OpsSettingsCamerasRoute
+  '/_ops/settings/debug': typeof OpsSettingsDebugRoute
+  '/_ops/settings/detection': typeof OpsSettingsDetectionRoute
+  '/_ops/settings/devices': typeof OpsSettingsDevicesRoute
+  '/_ops/settings/display': typeof OpsSettingsDisplayRoute
   '/_ops/settings/general': typeof OpsSettingsGeneralRoute
+  '/_ops/settings/roi': typeof OpsSettingsRoiRoute
   '/_ops/settings/': typeof OpsSettingsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/display-preview'
     | '/kiosk'
     | '/analytics'
     | '/dashboard'
     | '/events'
     | '/health'
     | '/settings'
+    | '/settings/access'
+    | '/settings/audio'
     | '/settings/cameras'
+    | '/settings/debug'
+    | '/settings/detection'
+    | '/settings/devices'
+    | '/settings/display'
     | '/settings/general'
+    | '/settings/roi'
     | '/settings/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/display-preview'
     | '/kiosk'
     | '/analytics'
     | '/dashboard'
     | '/events'
     | '/health'
+    | '/settings/access'
+    | '/settings/audio'
     | '/settings/cameras'
+    | '/settings/debug'
+    | '/settings/detection'
+    | '/settings/devices'
+    | '/settings/display'
     | '/settings/general'
+    | '/settings/roi'
     | '/settings'
   id:
     | '__root__'
     | '/'
     | '/_ops'
+    | '/display-preview'
     | '/kiosk'
     | '/_ops/analytics'
     | '/_ops/dashboard'
     | '/_ops/events'
     | '/_ops/health'
     | '/_ops/settings'
+    | '/_ops/settings/access'
+    | '/_ops/settings/audio'
     | '/_ops/settings/cameras'
+    | '/_ops/settings/debug'
+    | '/_ops/settings/detection'
+    | '/_ops/settings/devices'
+    | '/_ops/settings/display'
     | '/_ops/settings/general'
+    | '/_ops/settings/roi'
     | '/_ops/settings/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   OpsRoute: typeof OpsRouteWithChildren
+  DisplayPreviewRoute: typeof DisplayPreviewRoute
   KioskRoute: typeof KioskRoute
 }
 
@@ -172,6 +269,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof OpsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/display-preview': {
+      id: '/display-preview'
+      path: '/display-preview'
+      fullPath: '/display-preview'
+      preLoaderRoute: typeof DisplayPreviewRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/kiosk': {
@@ -223,11 +327,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OpsSettingsIndexRouteImport
       parentRoute: typeof OpsSettingsRoute
     }
+    '/_ops/settings/access': {
+      id: '/_ops/settings/access'
+      path: '/access'
+      fullPath: '/settings/access'
+      preLoaderRoute: typeof OpsSettingsAccessRouteImport
+      parentRoute: typeof OpsSettingsRoute
+    }
+    '/_ops/settings/audio': {
+      id: '/_ops/settings/audio'
+      path: '/audio'
+      fullPath: '/settings/audio'
+      preLoaderRoute: typeof OpsSettingsAudioRouteImport
+      parentRoute: typeof OpsSettingsRoute
+    }
     '/_ops/settings/cameras': {
       id: '/_ops/settings/cameras'
       path: '/cameras'
       fullPath: '/settings/cameras'
       preLoaderRoute: typeof OpsSettingsCamerasRouteImport
+      parentRoute: typeof OpsSettingsRoute
+    }
+    '/_ops/settings/debug': {
+      id: '/_ops/settings/debug'
+      path: '/debug'
+      fullPath: '/settings/debug'
+      preLoaderRoute: typeof OpsSettingsDebugRouteImport
+      parentRoute: typeof OpsSettingsRoute
+    }
+    '/_ops/settings/detection': {
+      id: '/_ops/settings/detection'
+      path: '/detection'
+      fullPath: '/settings/detection'
+      preLoaderRoute: typeof OpsSettingsDetectionRouteImport
+      parentRoute: typeof OpsSettingsRoute
+    }
+    '/_ops/settings/devices': {
+      id: '/_ops/settings/devices'
+      path: '/devices'
+      fullPath: '/settings/devices'
+      preLoaderRoute: typeof OpsSettingsDevicesRouteImport
+      parentRoute: typeof OpsSettingsRoute
+    }
+    '/_ops/settings/display': {
+      id: '/_ops/settings/display'
+      path: '/display'
+      fullPath: '/settings/display'
+      preLoaderRoute: typeof OpsSettingsDisplayRouteImport
       parentRoute: typeof OpsSettingsRoute
     }
     '/_ops/settings/general': {
@@ -237,18 +383,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OpsSettingsGeneralRouteImport
       parentRoute: typeof OpsSettingsRoute
     }
+    '/_ops/settings/roi': {
+      id: '/_ops/settings/roi'
+      path: '/roi'
+      fullPath: '/settings/roi'
+      preLoaderRoute: typeof OpsSettingsRoiRouteImport
+      parentRoute: typeof OpsSettingsRoute
+    }
   }
 }
 
 interface OpsSettingsRouteChildren {
+  OpsSettingsAccessRoute: typeof OpsSettingsAccessRoute
+  OpsSettingsAudioRoute: typeof OpsSettingsAudioRoute
   OpsSettingsCamerasRoute: typeof OpsSettingsCamerasRoute
+  OpsSettingsDebugRoute: typeof OpsSettingsDebugRoute
+  OpsSettingsDetectionRoute: typeof OpsSettingsDetectionRoute
+  OpsSettingsDevicesRoute: typeof OpsSettingsDevicesRoute
+  OpsSettingsDisplayRoute: typeof OpsSettingsDisplayRoute
   OpsSettingsGeneralRoute: typeof OpsSettingsGeneralRoute
+  OpsSettingsRoiRoute: typeof OpsSettingsRoiRoute
   OpsSettingsIndexRoute: typeof OpsSettingsIndexRoute
 }
 
 const OpsSettingsRouteChildren: OpsSettingsRouteChildren = {
+  OpsSettingsAccessRoute: OpsSettingsAccessRoute,
+  OpsSettingsAudioRoute: OpsSettingsAudioRoute,
   OpsSettingsCamerasRoute: OpsSettingsCamerasRoute,
+  OpsSettingsDebugRoute: OpsSettingsDebugRoute,
+  OpsSettingsDetectionRoute: OpsSettingsDetectionRoute,
+  OpsSettingsDevicesRoute: OpsSettingsDevicesRoute,
+  OpsSettingsDisplayRoute: OpsSettingsDisplayRoute,
   OpsSettingsGeneralRoute: OpsSettingsGeneralRoute,
+  OpsSettingsRoiRoute: OpsSettingsRoiRoute,
   OpsSettingsIndexRoute: OpsSettingsIndexRoute,
 }
 
@@ -277,6 +444,7 @@ const OpsRouteWithChildren = OpsRoute._addFileChildren(OpsRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   OpsRoute: OpsRouteWithChildren,
+  DisplayPreviewRoute: DisplayPreviewRoute,
   KioskRoute: KioskRoute,
 }
 export const routeTree = rootRouteImport

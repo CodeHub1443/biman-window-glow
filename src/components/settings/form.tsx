@@ -15,8 +15,8 @@ import { cn } from "@/lib/utils";
 export function Field({
   label, hint, error, dirty, onReset, children, id, demo, className,
 }: {
-  label: string; hint?: ReactNode; error?: string | undefined; dirty?: boolean; onReset?: () => void;
-  children: (id: string, describedBy: string | undefined) => ReactNode; id?: string; demo?: boolean; className?: string;
+  label: string; hint?: ReactNode; error?: string | undefined; dirty?: boolean | undefined; onReset?: (() => void) | undefined;
+  children: (id: string, describedBy: string | undefined) => ReactNode; id?: string | undefined; demo?: boolean | undefined; className?: string | undefined;
 }) {
   const auto = useId();
   const fid = id ?? auto;
@@ -203,7 +203,7 @@ export function SaveBar<T>({ form, savedAt, saveLabel = "Save changes" }: { form
 
 export function ConfirmDialog({ open, onOpenChange, title, description, confirmLabel, onConfirm, destructive, children, confirmDisabled }: {
   open: boolean; onOpenChange: (o: boolean) => void; title: string; description: ReactNode; confirmLabel: string;
-  onConfirm: () => void; destructive?: boolean; children?: ReactNode; confirmDisabled?: boolean;
+  onConfirm: () => void; destructive?: boolean | undefined; children?: ReactNode; confirmDisabled?: boolean | undefined;
 }) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
