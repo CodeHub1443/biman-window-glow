@@ -49,7 +49,7 @@ function Index() {
       {/* Developer panel — floats over the bezel, never shrinks the display. Not rendered in /kiosk. */}
       <div className="fixed bottom-6 right-6 z-50">
         {open ? (
-          <div className="w-72 rounded-lg border border-border bg-popover/95 p-4 text-popover-foreground shadow-2xl backdrop-blur">
+          <div className="max-h-[calc(100vh-3rem)] w-72 overflow-y-auto rounded-lg border border-border bg-popover/95 p-4 text-popover-foreground shadow-2xl backdrop-blur">
             <div className="mb-3 flex items-center justify-between">
               <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">Demo controls</span>
               <button onClick={() => setOpen(false)} aria-label="Close demo controls" className="rounded p-1 hover:bg-accent"><X className="h-4 w-4" /></button>
