@@ -6,6 +6,7 @@ import { useDisplayConfig } from "@/hooks/use-display-config";
 import { useVisitorDisplay } from "@/hooks/use-visitor-display";
 import { mockEventService, type VisitorEvent } from "@/services/mock-event-service";
 import { useTheme } from "@/components/ThemeProvider";
+import { SECTIONS } from "@/components/settings/sections";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -48,7 +49,7 @@ function Index() {
       {/* Developer panel — floats over the bezel, never shrinks the display. Not rendered in /kiosk. */}
       <div className="fixed bottom-6 right-6 z-50">
         {open ? (
-          <div className="w-72 rounded-lg border border-border bg-popover/95 p-4 text-popover-foreground shadow-2xl backdrop-blur">
+          <div className="max-h-[calc(100vh-3rem)] w-72 overflow-y-auto rounded-lg border border-border bg-popover/95 p-4 text-popover-foreground shadow-2xl backdrop-blur">
             <div className="mb-3 flex items-center justify-between">
               <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">Demo controls</span>
               <button onClick={() => setOpen(false)} aria-label="Close demo controls" className="rounded p-1 hover:bg-accent"><X className="h-4 w-4" /></button>
@@ -72,13 +73,23 @@ function Index() {
               <button className={btn} onClick={toggle}>{theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}Theme</button>
               <Link to="/kiosk" target="_blank" className={btn}><Maximize className="h-4 w-4" />Kiosk</Link>
             </div>
+            <div className="mt-4 border-t border-border pt-3">
+              <Link to="/settings" className="mb-2 block font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground hover:text-foreground">System settings</Link>
+              <div className="grid grid-cols-1 gap-1">
+                {SECTIONS.map((s) => (
+                  <Link key={s.id} to={s.to} className="flex items-center gap-2 rounded px-2 py-1.5 text-sm hover:bg-accent">
+                    <s.icon className="h-4 w-4 text-primary" />{s.title}
+                  </Link>
+                ))}
+              </div>
+            </div>
           </div>
         ) : (
           <button
             onClick={() => setOpen(true)}
             className="flex items-center gap-2 rounded-full border border-border bg-popover/70 px-3 py-2 text-xs font-medium text-popover-foreground opacity-60 backdrop-blur transition hover:opacity-100"
           >
-            <SlidersHorizontal className="h-4 w-4" /> Demo
+            <SlidersHorizontal className="h-4 w-4" /> Settings
           </button>
         )}
       </div>
